@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "599777326680",
+    "firebase_url": "https://studentmanager-900b9.firebaseio.com",
+    "project_id": "studentmanager-900b9",
+    "storage_bucket": "studentmanager-900b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599777326680:android:98d28e69d8548922",
+        "android_client_info": {
+          "package_name": "pt.ua.icm.studentmanagerv1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599777326680-4r6klae3oqfbcdpu05crcgpi8bpgvbum.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt.ua.icm.studentmanagerv1",
+            "certificate_hash": "49e34da82efb32db66f9c35f62aa00d8422e0000"
+          }
+        },
+        {
+          "client_id": "599777326680-l3k9i1k5jc9t7ppu4q1d5vvvn1mjimgk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPrV3pUJ_DhbkjOAzHXfaWk9MS1sjlIdI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599777326680-l3k9i1k5jc9t7ppu4q1d5vvvn1mjimgk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
