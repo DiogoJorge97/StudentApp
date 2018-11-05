@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">StudentManagerV1</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="classes">Classes</string>
+    <string name="study">Study</string>
+    <string name="calendar">Calendar</string>
+    <string name="prox_avaliacoes">Próximas Avaliações</string>
+    <string name="textView">TextView</string>
+    <string name="study_button">Study</string>
+    <string name="aulas_de_hoje">Aulas de Hoje</string>
+</resources>
