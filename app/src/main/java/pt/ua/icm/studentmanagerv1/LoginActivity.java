@@ -1,12 +1,13 @@
 package pt.ua.icm.studentmanagerv1;
 
-
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,123 +15,117 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.quickstart.auth.R;
 
-/**
- * Demonstrate Firebase Authentication using a custom minted token. For more information, see:
- * https://firebase.google.com/docs/auth/android/custom-auth
- */
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "CustomAuthActivity";
+    private EditText mEmailText;
+    private EditText mPasswordText;
 
-    // [START declare_auth]
+    private Button mLoginButton;
+    private Button mSignUpButton;
     private FirebaseAuth mAuth;
-    // [END declare_auth]
 
-    private String mLoginToken;
-    private TokenBroadcastReceiver mTokenReceiver;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        //initializing stuff
         setContentView(R.layout.activity_login);
+        mEmailText = findViewById(R.id.loginTextView);
+        mPasswordText = findViewById(R.id.passwordTextView);
+        mLoginButton = findViewById(R.id.buttonLonIn);
+        mSignUpButton = findViewById(R.id.buttonSignUp);
+        mAuth = FirebaseAuth.getInstance();
 
-        // Button click listeners
-        findViewById(R.id.email_sign_in_button).setOnClickListener(this);
 
-        // Create token receiver (for demo purposes only)
-        mTokenReceiver = new TokenBroadcastReceiver() {
+        //Check if logIn is already done
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onNewToken(String token) {
-                Log.d(TAG, "onNewToken:" + token);
-                setCustomToken(token);
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    startMainActivity(currentUser);
+                }
             }
         };
 
-        // [START initialize_auth]
-        mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
+        //check if logIn button has been pressed
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSignIn();
+
+            }
+        });
+
+        //check if signUp button has been pressed
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startSignUp();
+
+            }
+        });
+
     }
 
-    // [START on_start_check_user]
+
+
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-    // [END on_start_check_user]
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mTokenReceiver, TokenBroadcastReceiver.getFilter());
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mTokenReceiver);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     private void startSignIn() {
-        // Initiate sign in with custom token
-        // [START sign_in_custom]
-        mAuth.signInWithCustomToken(mLoginToken)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCustomToken:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCustomToken:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty((password))) {
+            Toast.makeText(LoginActivity.this, "Filds are empty", Toast.LENGTH_LONG).show();
+        } else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
-        // [END sign_in_custom]
+                    });
+        }
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            ((TextView) findViewById(R.id.email)).setText(
-                    "User ID: " + user.getUid());
+
+
+    private void startSignUp() {
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty((password))) {
+            Toast.makeText(LoginActivity.this, "Filds are empty", Toast.LENGTH_LONG).show();
         } else {
-            ((TextView) findViewById(R.id.email)).setText(
-                    "Error: sign in failed.");
-        }
-    }
-
-    private void setCustomToken(String token) {
-        mLoginToken = token;
-
-        String status;
-        if (mLoginToken != null) {
-            status = "Token:" + mLoginToken;
-        } else {
-            status = "Token: null";
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
 
-        // Enable/disable sign-in button and show the token
-        findViewById(R.id.email_sign_in_button).setEnabled((mLoginToken != null));
-        ((TextView) findViewById(R.id.textTokenStatus)).setText(status);
     }
 
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.email_sign_in_button) {
-            startSignIn();
-
-        }
+    private void startMainActivity(FirebaseUser user) {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
+
 }
