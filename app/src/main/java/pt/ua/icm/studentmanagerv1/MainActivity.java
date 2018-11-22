@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +18,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
 
     //Variables
     String[] CADEIRAS = {"Introdução à Engenharia de Software", "Complementos de Base de Dados", "Inteligencia Artificial", "Segurança Informática nas Organizações"};
@@ -27,7 +29,23 @@ public class MainActivity extends AppCompatActivity {
     String[] HORAS = {"9h-11h", "11h-13h", "14h-16h30"};
     String[] SALA = {"4.109", "4.208", "4.203"};
     int NR_AULAS = HORAS.length;
+    //FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String TAG = "MMYTAG";
 
+
+    //----------------------------On Create Methods--------------------------------------------
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //Bottom navigation bar
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(this);
+        loadFragment(new HomeFragment());
+        //List of NextEvaluations and NextClasses
+        //setListViews();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    //--------------------------Bottom Navigation and Option Menu Actions----------------------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -46,47 +66,38 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_class:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_calendar:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-                case R.id.navigation_study:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-            }
-            return false;
+    private Boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            return true;
         }
-    };
-
-
-
+        return false;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment fragment = null;
 
-        //Bottom navigation bar
-        mTextMessage = findViewById(R.id.message);
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
-        //List of NextEvaluations and NextClasses
-        setListViews();
-
-
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.navigation_class:
+                fragment = new ClassesFragment();
+                break;
+            case R.id.navigation_calendar:
+                fragment = new CalendarFragment();
+                break;
+            case R.id.navigation_study:
+                fragment = new StudyFragment();
+                break;
+        }
+        return loadFragment(fragment);
     }
+
+
+    //-------------------------------Other shit-------------------------------
+/*
 
     private void setListViews() {
         ListView evaluationsList = findViewById(R.id.next_evaluation_list);
@@ -104,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         params2.height = 120*HORAS.length;                                                      //Height of each element in list
         classesList.setLayoutParams(params2);
     }
+
+
 
 
     class CustomAdapter1 extends BaseAdapter {
@@ -176,5 +189,6 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
     }
+*/
 
 }

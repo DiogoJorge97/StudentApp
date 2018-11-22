@@ -5,85 +5,21 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#DADADA">
+    android:background="#DADADA"
+    tools:context=".MainActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scrollbars="none">
+        app:layout_constraintTop_toTopOf="parent">
 
+    </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:id="@+id/next_evaluation_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/square_rounded_corners"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/proximasAvaliacoesTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/prox_avaliacoes"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/list_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <ListView
-                    android:id="@+id/next_evaluation_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="77dp"
-                    android:paddingStart="16dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/next_class_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/square_rounded_corners"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/classesTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/aulas_de_hoje"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/next_classes_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:paddingStart="16dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+    
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
