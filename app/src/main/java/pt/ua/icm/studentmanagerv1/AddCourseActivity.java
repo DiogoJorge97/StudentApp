@@ -1,6 +1,7 @@
 package pt.ua.icm.studentmanagerv1;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -19,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AddCourseActivity extends AppCompatActivity {
@@ -29,6 +34,10 @@ public class AddCourseActivity extends AppCompatActivity {
     EditText abreviationEdit;
     EditText idEdit;
     EditText ectsEdit;
+    static final String KEY_NAME = "Name";
+    static final String KEY_ABRE = "Abbreviation";
+    static final String KEY_ECTS = "ECTS";
+    static final String KEY_ID = "ID";
 
     CollectionReference allCoursesReference = MainActivity.getDb().collection("Degrees");
     private static final String TAG = "MyTag";
@@ -177,13 +186,43 @@ public class AddCourseActivity extends AppCompatActivity {
 
 
     private void saveToFirestore() {
-        String[] cursos = new String [mUserItems.size()];
+        final boolean[] flag = {false};
+        String[] cursos = new String[mUserItems.size()];
         int iter = 0;
-        for (int value: mUserItems){
+        for (int value : mUserItems) {
             cursos[iter] = possibleItems.get(value)[0];
             iter++;
         }
         Log.d(TAG1, Arrays.toString(cursos));
-        nameEdit.getText().toString();
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put(KEY_NAME, nameEdit.getText().toString());
+        userData.put(KEY_ABRE, abreviationEdit.getText().toString());
+        userData.put(KEY_ID, ectsEdit.getText().toString());
+        userData.put(KEY_ECTS, idEdit.getText().toString());
+
+        for (String curso : cursos) {
+            MainActivity.getDb().document("Degrees/"+ curso + "/Courses/"+idEdit.getText().toString()).set(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            flag[0] = true;
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG,"ERROR");
+                        }
+                    });
+        }
+
+        if (flag[0] ==true){
+            Toast.makeText(AddCourseActivity.this, "UC criada", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(AddCourseActivity.this, MainActivity.class);
+            //intent.putExtra("NMEC", nMec);
+            startActivity(intent); //TODO será que o NMec tem que andar sempre a saltitar?
+
+        }
     }
 }
