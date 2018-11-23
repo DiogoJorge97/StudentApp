@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +33,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
     String TAG = "MMYTAG";
 
+
+
+    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+    public static FirebaseFirestore getDb() {
+        return db;
+    }
 
     //----------------------------On Create Methods--------------------------------------------
     @Override
@@ -90,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.navigation_study:
                 fragment = new StudyFragment();
+                break;
+            case R.id.navigation_boss:
+                fragment = new ComissionFragment();
                 break;
         }
         return loadFragment(fragment);

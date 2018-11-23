@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -21,46 +22,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class HomeFragment extends android.support.v4.app.Fragment {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    DocumentReference alovelaceDocumentRef = db.document("Students/Stundent80246/Courses/45424");
-
-
-    String TAG = "MyTag";
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, null);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        return view;
     }
 
 
-    public void loadClasses(View view) {
-        alovelaceDocumentRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
-                            Toast.makeText(getActivity(), "Document exists", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Document does not exists", Toast.LENGTH_SHORT).show();
-                        }
-                        ObjectClasses classes = documentSnapshot.toObject(ObjectClasses.class);
-                        Log.d(TAG, "Abreviation: " + classes.getAbreviation());
 
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-    }
 
 
 }

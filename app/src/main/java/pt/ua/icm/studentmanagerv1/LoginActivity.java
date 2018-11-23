@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startSignUp();
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
 
             }
         });
@@ -104,25 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private void startSignUp() {
-        String email = mEmailText.getText().toString();
-        String password = mPasswordText.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty((password))) {
-            Toast.makeText(LoginActivity.this, "Filds are empty", Toast.LENGTH_LONG).show();
-        } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-
-    }
 
     private void startMainActivity(FirebaseUser user) {
         startActivity(new Intent(LoginActivity.this, MainActivity.class));

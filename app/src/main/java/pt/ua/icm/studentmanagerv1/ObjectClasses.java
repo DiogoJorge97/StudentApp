@@ -44,4 +44,14 @@ public class ObjectClasses {
         return semester;
     }
 
+    @Override
+    public String toString() {
+        return "ObjectClasses{" +
+                "abreviation='" + abreviation + '\'' +
+                ", name='" + name + '\'' +
+                ", ects=" + ects +
+                ", academicYear='" + academicYear + '\'' +
+                ", semester=" + semester +
+                '}';
+    }
 }

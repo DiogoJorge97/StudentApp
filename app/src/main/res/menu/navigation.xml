@@ -24,4 +24,9 @@
         android:icon="@drawable/ic_study"
         android:title="@string/study" />
 
+    <item
+        android:id="@+id/navigation_boss"
+        android:icon="@drawable/ic_boss"
+        android:title="Comissão de curso" />
+
 </menu>
