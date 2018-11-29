@@ -154,6 +154,36 @@
             android:autofillHints="" tools:targetApi="o"/>
 
 
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Curso currente"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nmec_edit" />
+
+
+
+
+        <Spinner
+            android:id="@+id/degree_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13"/>
+            <!--android:spinnerMode="dropdown"-->
+
+
+
         <Button
             android:id="@+id/sign_up_button"
             android:layout_width="0dp"
@@ -161,10 +191,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:text="Sign Up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nmec_edit"/>
+            app:layout_constraintTop_toBottomOf="@+id/degree_spinner"/>
 
     </android.support.constraint.ConstraintLayout>
 

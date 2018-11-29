@@ -30,7 +30,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".AddCourseActivity"></activity>
+        <activity android:name=".AddCourseActivity" />
+        <activity android:name=".UserSetUpActivity"></activity>
     </application>
 
 </manifest>

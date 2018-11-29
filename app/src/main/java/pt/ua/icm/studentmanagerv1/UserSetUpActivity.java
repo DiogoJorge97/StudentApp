@@ -1,7 +1,6 @@
 package pt.ua.icm.studentmanagerv1;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,34 +9,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
-public class AddCourseActivity extends AppCompatActivity {
+public class UserSetUpActivity extends AppCompatActivity {
 
-    Button mChosen;
-    Button mAddButton;
-    EditText nameEdit;
-    EditText abreviationEdit;
-    EditText idEdit;
-    EditText ectsEdit;
-    static final String KEY_NAME = "Name";
-    static final String KEY_ABRE = "Abbreviation";
-    static final String KEY_ECTS = "ECTS";
-    static final String KEY_ID = "ID";
+    Button mAddBtn;
+    Button mChosenBtn;
+
 
     CollectionReference allCoursesReference = MainActivity.getDb().collection("Degrees");
     private static final String TAG = "MyTag";
@@ -50,53 +37,59 @@ public class AddCourseActivity extends AppCompatActivity {
     ArrayList<Integer> mUserItems = new ArrayList<>();
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_course);
+        setContentView(R.layout.activity_user_set_up);
 
+        mAddBtn = findViewById(R.id.add_courses);
+        mChosenBtn = findViewById(R.id.choseDegrees);
 
-        mAddButton = findViewById(R.id.add_courses);
-        mChosen = findViewById(R.id.choseDegrees);
-        nameEdit = findViewById(R.id.name_edit);
-        abreviationEdit = findViewById(R.id.abr_edit);
-        idEdit = findViewById(R.id.id_edit);
-        ectsEdit = findViewById(R.id.ects_edit);
 
 
         possibleItems = new ArrayList<>();
 
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+       /* mAddBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveToFirestore();
+                //chooseSemesters();
             }
-        });
+        });*/
 
 
-        MainActivity.getDb().collection("Degrees")
+        MainActivity.getDb().document("Students/St" + MainActivity.getnMec())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            getAllCourses(task);
-                            createArrayOfCourses(possibleItems);
-
-                            checkedItems = new boolean[listItems.length];
-
-                            allertDialog();
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            } else {
+                                Log.d(TAG, "No such document " + MainActivity.getnMec());
+                            }
+                            //getStudentDegrees(document.getData());
                         } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
                 });
     }
 
+    private void getStudentDegrees(Map<String, Object> data) {
+        //String deggres;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            Log.d(TAG, entry.toString());
+        }
 
 
 
-    private void allertDialog() {
+    }
+
+
+    /*private void allertDialog() {
         mChosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,46 +179,5 @@ public class AddCourseActivity extends AppCompatActivity {
         return (type + " " + name);
 
     }
-
-
-    private void saveToFirestore() {
-        final boolean[] flag = {false};
-        String[] cursos = new String[mUserItems.size()];
-        int iter = 0;
-        for (int value : mUserItems) {
-            cursos[iter] = possibleItems.get(value)[0];
-            iter++;
-        }
-        Log.d(TAG1, Arrays.toString(cursos));
-
-        Map<String, Object> userData = new HashMap<>();
-        userData.put(KEY_NAME, nameEdit.getText().toString());
-        userData.put(KEY_ABRE, abreviationEdit.getText().toString());
-        userData.put(KEY_ID, ectsEdit.getText().toString());
-        userData.put(KEY_ECTS, idEdit.getText().toString());
-
-        for (String curso : cursos) {
-            MainActivity.getDb().document("Degrees/"+ curso + "/Courses/"+idEdit.getText().toString()).set(userData)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            flag[0] = true;
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG,"ERROR");
-                        }
-                    });
-        }
-
-        if (flag[0] ==true){
-            Toast.makeText(AddCourseActivity.this, "UC criada", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(AddCourseActivity.this, MainActivity.class);
-            //intent.putExtra("NMEC", nMec);
-            startActivity(intent); //TODO será que o NMec tem que andar sempre a saltitar?
-
-        }
-    }
+    */
 }

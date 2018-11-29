@@ -31,8 +31,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     String[] SALA = {"4.109", "4.208", "4.203"};
     int NR_AULAS = HORAS.length;
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String TAG = "MMYTAG";
+    static String TAG = "MMYTAG";
 
+    static String nMec;
+    static String hasCourses;
+    static final String currentYear = "2018-2019";
 
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -52,8 +55,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         loadFragment(new HomeFragment());
+
+
+        Intent intent = getIntent();
+        nMec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);
+        hasCourses = intent.getStringExtra(LoginActivity.EXTRA_HASCOURSES);
+
+
         //List of NextEvaluations and NextClasses
         //setListViews();
+    }
+
+    public static String getCurrentYear() {
+        return currentYear;
+    }
+
+    public static String getnMec() {
+        return nMec;
+    }
+
+    public static Boolean getHasCourses() {
+        if (hasCourses.equals("true")){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
