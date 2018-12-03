@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddCourseActivity">
+    tools:context=".ResponsibleNewCourse">
 
     <TextView
         android:id="@+id/textView5"
@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Cursos"
+        android:text="Edições"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -135,7 +135,7 @@
         android:id="@+id/choseDegrees"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:text="Cursos"
+        android:text="Escolher"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView10"
         app:layout_constraintEnd_toEndOf="@+id/ects_edit"
         app:layout_constraintStart_toStartOf="@+id/ects_edit" />

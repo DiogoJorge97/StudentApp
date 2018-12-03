@@ -4,11 +4,9 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/classes"
-        android:textSize="50dp"
-        android:gravity="center"/>
+        android:id="@+id/listAllCourses"></ListView>
 
 </android.support.constraint.ConstraintLayout>

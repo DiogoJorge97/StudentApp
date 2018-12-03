@@ -9,19 +9,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private static ObjectDegree userDegree;
+    private static ObjectStudent user;
+    private static boolean hasCourses;
+    private static String nmec;
+    private static final String currentYear = "2018-2019";
+    private static Intent intent;
 
     //Variables
     String[] CADEIRAS = {"Introdução à Engenharia de Software", "Complementos de Base de Dados", "Inteligencia Artificial", "Segurança Informática nas Organizações"};
@@ -31,11 +35,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     String[] SALA = {"4.109", "4.208", "4.203"};
     int NR_AULAS = HORAS.length;
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
-    static String TAG = "MMYTAG";
+    private final String TAG = "DTag MainActivity";
 
-    static String nMec;
-    static String hasCourses;
-    static final String currentYear = "2018-2019";
+
 
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -57,29 +59,40 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         loadFragment(new HomeFragment());
 
 
-        Intent intent = getIntent();
-        nMec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);
-        hasCourses = intent.getStringExtra(LoginActivity.EXTRA_HASCOURSES);
-
+        intent = getIntent();
+        nmec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);
+        createUserObjects();
 
         //List of NextEvaluations and NextClasses
         //setListViews();
     }
 
+
+
+
+    //-------------------------------------Getters---------------
     public static String getCurrentYear() {
         return currentYear;
     }
 
     public static String getnMec() {
-        return nMec;
+        if (getUser()!=null){
+            return MainActivity.getUser().getNmec();
+        } else {
+            return intent.getStringExtra(LoginActivity.EXTRA_NMEC);
+        }
     }
 
     public static Boolean getHasCourses() {
-        if (hasCourses.equals("true")){
-            return true;
-        } else {
-            return false;
-        }
+        return hasCourses;
+    }
+
+    public static ObjectStudent getUser() {
+        return user;
+    }
+
+    public static ObjectDegree getUserDegree() {
+        return userDegree;
     }
 
     @Override
@@ -118,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
                 break;
             case R.id.navigation_class:
-                fragment = new ClassesFragment();
+                fragment = new FragmentCourses();
                 break;
             case R.id.navigation_calendar:
                 fragment = new CalendarFragment();
@@ -127,10 +140,76 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new StudyFragment();
                 break;
             case R.id.navigation_boss:
-                fragment = new ComissionFragment();
+                fragment = new ResponsibleFragment();
                 break;
         }
         return loadFragment(fragment);
+    }
+
+
+    private void createUserObjects() {
+        Log.d(TAG, "NMec creating student: " + getnMec());
+        getDb().collection("Students").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            if (document.getId().equals("St" + getnMec())){
+                                user = document.toObject(ObjectStudent.class);
+                                Log.d(TAG,user.toString());
+
+                                createUserDegreeObject();
+
+                                createUserCoursesObject();
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //TODO To do
+            }
+        });
+
+    }
+
+    private void createUserDegreeObject() {
+        getDb().collection("Degrees").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            if (user.getDegrees().contains(document.getId())) {
+                                userDegree = document.toObject(ObjectDegree.class);
+                                Log.d(TAG, userDegree.toString());
+                            }
+
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //TODO To do
+            }
+        });
+    }
+
+    private void createUserCoursesObject(){
+        getDb().collection("Students/St" + getUser().getNmec() + "/Courses").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        hasCourses=false;
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots){
+                            hasCourses=true;
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
 

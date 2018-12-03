@@ -31,6 +31,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -52,12 +53,12 @@ public class SignUpActivity extends AppCompatActivity {
     ArrayList<String[]> possibleItems;
 
 
-    private static final String KEY_NAME = "name";
-    private static final String KEY_UA = "ua email";
-    private static final String KEY_GMAIL = "gmail";
-    private static final String KEY_NMEC = "nmec";
-    private static final String KEY_DEGREE = "deggres";
-
+    private static final String KEY_NAME = "Name";
+    private static final String KEY_UA = "UaEmail";
+    private static final String KEY_GMAIL = "Gmail";
+    private static final String KEY_NMEC = "Nmec";
+    private static final String KEY_DEGREE = "Degrees";
+    private static final String EXTRA_HASCOURSES = "HasCourses";
 
 
     String studentDegree;
@@ -92,15 +93,15 @@ public class SignUpActivity extends AppCompatActivity {
     private void spinner() {
         Spinner spinner = findViewById(R.id.degree_spinner);
 
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CoursesToPrint);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, CoursesToPrint);
         spinner.setAdapter(spinnerArrayAdapter);
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long arg3) {
                 String choosenDegree = parent.getItemAtPosition(position).toString();
-                for (String[] degree: possibleItems){
-                    if(degree[1].equals(choosenDegree)){
+                for (String[] degree : possibleItems) {
+                    if (degree[1].equals(choosenDegree)) {
                         studentDegree = degree[0];
                     }
                 }
@@ -121,14 +122,15 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
     private void startSignUp() {
         final String name = nameEdit.getText().toString();
         final String uaEmail = uaEmailEdit.getText().toString();
         final String password = passwordEdit.getText().toString();
         final String gmail = gmailEdit.getText().toString();
-        final int nMec = Integer.parseInt(nMecEdit.getText().toString());
+        final String nMec = nMecEdit.getText().toString();
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(uaEmail) || TextUtils.isEmpty(password) || TextUtils.isEmpty(gmail) || nMec == 0) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(uaEmail) || TextUtils.isEmpty(password) || TextUtils.isEmpty(gmail) || TextUtils.isEmpty(nMec)) {
             Log.d(TAG, nMec + " " + gmail + " " + password + " " + uaEmail + " " + name);
             Toast.makeText(SignUpActivity.this, "Filds are empty", Toast.LENGTH_LONG).show();
         } else {
@@ -137,7 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                addUserToDataBase(name, uaEmail, gmail, nMec);
+                                addUserToDataBase(name, uaEmail, gmail,  nMec);
                             }
                         }
                     });
@@ -145,15 +147,15 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //Save data to firestore
-    private void addUserToDataBase(String name, String uaEmail, String gmail, final int nMec) {
-        Map<String, Object> subMap = new HashMap<>();
-        subMap.put(MainActivity.getCurrentYear(), studentDegree);
+    private void addUserToDataBase(String name, String uaEmail, String gmail, final String nMec) {
+        List<String> subList = new ArrayList<>();
+        subList.add(studentDegree);
         Map<String, Object> userData = new HashMap<>();
         userData.put(KEY_NAME, name);
         userData.put(KEY_UA, uaEmail);
         userData.put(KEY_GMAIL, gmail);
         userData.put(KEY_NMEC, nMec);
-        userData.put(KEY_DEGREE, subMap);
+        userData.put(KEY_DEGREE, subList);
 
         db.document("/Students/St" + nMec).set(userData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -161,7 +163,8 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(SignUpActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        intent.putExtra("NMEC", nMec);
+                        intent.putExtra("Nmec", nMec);
+                        intent.putExtra(EXTRA_HASCOURSES, "false");
                         startActivity(intent);
 
                     }
@@ -181,9 +184,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    getAllCourses(task);
-                    createArrayOfCourses(possibleItems);
-                    CoursesToPrint = createArrayOfCourses(possibleItems);
+                    CoursesToPrint = getAllCourses(task);
                     spinner();
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -191,14 +192,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-    private ArrayList<String> createArrayOfCourses(ArrayList<String[]> possibleItems) {
-        ArrayList<String> listItems = new ArrayList<>();
-        for (String[] item : possibleItems) {
-            listItems.add(item[1]);
-        }
-        return listItems;
-    }
-    private void getAllCourses(@NonNull Task<QuerySnapshot> task) {
+
+    private ArrayList<String> getAllCourses(@NonNull Task<QuerySnapshot> task) {
         for (QueryDocumentSnapshot document : task.getResult()) {
             String[] degreeData = new String[2];
             degreeData[0] = document.getId();
@@ -206,7 +201,13 @@ public class SignUpActivity extends AppCompatActivity {
             Log.d(TAG, Arrays.toString(degreeData));
             possibleItems.add(degreeData);
         }
+        ArrayList<String> listItems = new ArrayList<>();
+        for (String[] item : possibleItems) {
+            listItems.add(item[1]);
+        }
+        return listItems;
     }
+
     private String retrieveNeededData(Map<String, Object> data) {
         String type = "";
         String name = "";
@@ -225,6 +226,4 @@ public class SignUpActivity extends AppCompatActivity {
         return (type + " " + name);
 
     }
-
-
 }

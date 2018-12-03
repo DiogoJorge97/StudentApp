@@ -16,38 +16,38 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassesFragment extends android.support.v4.app.Fragment {
+public class FragmentCourses extends android.support.v4.app.Fragment {
 
 
-    DocumentReference alovelaceDocumentRef = MainActivity.getDb().document("Students/Stundent80246/Courses/45424"); //TODO make path dinamic
 
-
-    String TAG = "MyTag";
+    String TAG = "DTag";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view;
         Boolean hasCourses =  MainActivity.getHasCourses();
-        Log.d(TAG, Boolean.toString(hasCourses));
+        Log.d(TAG, "HasCourses: "+ Boolean.toString(hasCourses));
         if (hasCourses){
             view = inflater.inflate(R.layout.fragment_classes, null);
         } else {
             view = inflater.inflate(R.layout.fragment_classes_setup, null);
+            Button button = view.findViewById(R.id.start_setup);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ListEnroleCourses.class);
+                    startActivity(intent);
+                }
+            });
         }
 
-        Button button = view.findViewById(R.id.start_setup);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserSetUpActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
 
         loadClasses(view);
@@ -57,28 +57,18 @@ public class ClassesFragment extends android.support.v4.app.Fragment {
 
 
     public void loadClasses(View view) {
-        alovelaceDocumentRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        MainActivity.getDb().collection("Students/St" + MainActivity.getnMec() + "/Courses").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Map<String, Object> hash = documentSnapshot.getData();
-                            Log.d(TAG, "Test String: " + hash);
-                            decriptHash(hash);
-                        } else {
-                            Toast.makeText(getActivity(), "Document does not exists", Toast.LENGTH_SHORT).show();
-                        }
-
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Failed to connect do DataBase", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
+            }
+        });
     }
 
 

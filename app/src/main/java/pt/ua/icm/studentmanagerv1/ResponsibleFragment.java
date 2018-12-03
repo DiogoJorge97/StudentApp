@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import io.grpc.internal.LogId;
-
-public class ComissionFragment extends android.support.v4.app.Fragment {
+public class ResponsibleFragment extends android.support.v4.app.Fragment {
 
     @Nullable
     @Override
@@ -23,7 +20,7 @@ public class ComissionFragment extends android.support.v4.app.Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddCourseActivity.class);
+                Intent intent = new Intent(getActivity(), ResponsibleNewCourse.class);
                 startActivity(intent);
             }
         });

@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void retrieveUserNmec(final String curEmail) {
-        db.collection("Students").whereEqualTo("ua email", curEmail)
+        db.collection("Students").whereEqualTo("UaEmail", curEmail)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -135,12 +135,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Map<String, Object> data = document.getData();
                         for (Map.Entry<String, Object> entry : data.entrySet()) {
-                            Log.d("MyTag4", entry.toString());
                             String key = entry.getKey();
                             Object value = entry.getValue();
                             Log.d("MyTag4", key);
-                            if (key.equals("nmec")) {
-                                Log.d("MyTag3", "Nmec inside: " + value.toString());
+                            if (key.equals("Nmec")) {
                                 nmec = value.toString();
                                 continueToMainActivity();
                             }
