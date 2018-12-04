@@ -47,7 +47,7 @@ public class ResponsibleNewCourse extends AppCompatActivity {
     static final String KEY_ID = "ID";
     static final String KEY_EDITIONS = "Editions";
     public static final int TEXT_REQUEST = 1;
-    private final String TAG = "DTag ResponsibleNCourse";
+    private final String TAG = "DTag RespNCourse";
 
     private static ObjectStudent user;
 
@@ -108,8 +108,6 @@ public class ResponsibleNewCourse extends AppCompatActivity {
             }
             Log.d(TAG, editions.toString());
 
-
-            Log.d(TAG, editions.toString());
 
             Map<String, Object> userData = new HashMap<>();
             userData.put(KEY_NAME, nameEdit.getText().toString());

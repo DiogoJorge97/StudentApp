@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
                 break;
             case R.id.navigation_class:
-                fragment = new FragmentCourses();
+                fragment = new ListCoursesFragment();
                 break;
             case R.id.navigation_calendar:
                 fragment = new CalendarFragment();
@@ -214,9 +214,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
     //-------------------------------Other shit-------------------------------
-/*
 
-    private void setListViews() {
+
+    /*private void setListViews() {
         ListView evaluationsList = findViewById(R.id.next_evaluation_list);
         ListView classesList = findViewById(R.id.next_classes_list);
         CustomAdapter1 customAdapter1 = new CustomAdapter1();
@@ -306,6 +306,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             return convertView;
         }
     }
-*/
 
+*/
 }

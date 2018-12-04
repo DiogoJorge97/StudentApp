@@ -58,7 +58,6 @@ public class ListEnroleCourses extends AppCompatActivity {
 
     //TODO Dinamic Degree
     private void loadAvailableCourses() {
-        Log.d(TAG, "Degree ID: " + MainActivity.getUserDegree().getID());
         MainActivity.getDb().collection("Degrees/" + MainActivity.getUserDegree().getID() +"/Courses").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -80,7 +79,7 @@ public class ListEnroleCourses extends AppCompatActivity {
     private void setListView() {
         listView = findViewById(R.id.checkable_list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.rowlayout, R.id.checkItem, coursesNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.rowlayout_check, R.id.checkItem, coursesNames);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

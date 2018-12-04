@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -168,8 +169,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 ObjectCourse courseTemp = document.toObject(ObjectCourse.class);
                                 saveStudentSubscription(id, edition, courseTemp);
-                                Intent intent = new Intent(ListEnroleCourses2.this, MainActivity.class);
-                                startActivity(intent);
+
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -193,8 +193,24 @@ public class ListEnroleCourses2 extends AppCompatActivity {
     }
 
     private void saveStudentSubscription(String id, String edition, ObjectCourse course) {
-        MainActivity.getDb().document("Students/St" + MainActivity.getnMec() + "/Courses/" + edition + "#" + id ).set(course);
+        course.setEmptyEditions();
+        course.setDocumentId(edition + "#" + id );
+        MainActivity.getDb().document("Students/St" + MainActivity.getnMec() + "/Courses/" + edition + "#" + id ).set(course)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Aluno inscrito");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Aluno não inscrito");
 
+            }
+        });
+
+        Intent intent = new Intent(ListEnroleCourses2.this, MainActivity.class);
+        startActivity(intent);
     }
 
 }

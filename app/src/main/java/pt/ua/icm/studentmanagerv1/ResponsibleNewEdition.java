@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResponsibleNewEdition extends AppCompatActivity {
 
@@ -99,7 +97,7 @@ public class ResponsibleNewEdition extends AppCompatActivity {
     private void setListView() {
         listView = findViewById(R.id.new_courses_list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.rowlayout, R.id.checkItem, allEditionsNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.rowlayout_check, R.id.checkItem, allEditionsNames);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
