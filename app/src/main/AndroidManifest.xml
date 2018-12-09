@@ -33,7 +33,13 @@
         <activity android:name=".ResponsibleNewCourse" />
         <activity android:name=".ListEnroleCourses" />
         <activity android:name=".ListEnroleCourses2" />
-        <activity android:name=".ResponsibleNewEdition"></activity>
+        <activity android:name=".ResponsibleNewEdition" />
+        <activity android:name=".ResponsibleEditActivity" />
+        <activity
+            android:name=".ResponsibleEditEvaluationsActivity"
+            android:label="@string/title_activity_responsible_edit_evaluations"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ListIndividualCourse"></activity>
     </application>
 
 </manifest>

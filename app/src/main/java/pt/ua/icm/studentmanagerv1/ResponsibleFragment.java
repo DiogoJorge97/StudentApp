@@ -16,11 +16,20 @@ public class ResponsibleFragment extends android.support.v4.app.Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comission,
                 container, false);
-        Button button = view.findViewById(R.id.add_classes);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button buttonAdd = view.findViewById(R.id.add_classes);
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ResponsibleNewCourse.class);
+                startActivity(intent);
+            }
+        });
+
+        Button buttonEdit = view.findViewById(R.id.edit_evaluation);
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ResponsibleEditActivity.class);
                 startActivity(intent);
             }
         });

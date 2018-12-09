@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         loadFragment(new HomeFragment());
 
 
+
+
         intent = getIntent();
         nmec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);
         createUserObjects();

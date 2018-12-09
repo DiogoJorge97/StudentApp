@@ -33,7 +33,11 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
     Map<String, List<String>> coursesNamesMap;
     List<String> coursesNewName;
 
+    private static ArrayList<String> selectedItems;
+
+
     String TAG = "DTag";
+    private String EXTRA_COURSE_SELECTION = "ExtraCourseSelection";
 
     @Nullable
     @Override
@@ -123,15 +127,15 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
         }
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = ((TextView) view).getText().toString();
-                for(Integer it : positOfStop) {
-                    listView.getChildAt(it).setEnabled(false);
-                    listView.getChildAt(it).setClickable(false);
-                }
-            }
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedItem = ((TextView) view).getText().toString();
+/*            for(Integer it : positOfStop) {
+                listView.getChildAt(it).setEnabled(false);
+                listView.getChildAt(it).setClickable(false);
+            }*/
+            Intent intent = new Intent(getActivity(), ListIndividualCourse.class);
+            intent.putExtra(EXTRA_COURSE_SELECTION, selectedItem);
+            startActivity(intent);
         });
 
 

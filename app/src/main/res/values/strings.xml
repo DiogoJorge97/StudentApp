@@ -35,4 +35,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="proximo">Proximo</string>
+    <string name="title_activity_responsible_edit_evaluations">ResponsibleEditEvaluationsActivity
+    </string>
+
+    <string-array name="season_array">
+        <item>Discreta</item>
+        <item>Final</item>
+        <item>Recurso</item>
+
+    </string-array>
+    <string-array name="component_array">
+        <item>Prática</item>
+        <item>Teórica</item>
+        <item>Teórica-Prática</item>
+    </string-array>
 </resources>

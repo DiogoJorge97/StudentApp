@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-
-public class ResponsibleDiscreeteFragment extends android.support.v4.app.Fragment {
+public class ResponsibleAlternativeFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_discreete, container, false);
+        View view = inflater.inflate(R.layout.fragment_alternative, container, false);
 
 
         return view;
