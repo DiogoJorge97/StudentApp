@@ -20,12 +20,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private static ObjectDegree userDegree;
-    private static ObjectStudent user;
-    private static boolean hasCourses;
-    private static String nmec;
-    private static final String currentYear = "2018-2019";
+
     private static Intent intent;
+    private static AllMightyCreator amc;
+    private static String nmec;
 
     //Variables
     String[] CADEIRAS = {"Introdução à Engenharia de Software", "Complementos de Base de Dados", "Inteligencia Artificial", "Segurança Informática nas Organizações"};
@@ -40,12 +38,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
-    static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
-    public static FirebaseFirestore getDb() {
-        return db;
-    }
 
     //----------------------------On Create Methods--------------------------------------------
     @Override
@@ -60,41 +53,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
 
+/*
+        Intent intent = getIntent();
+        nmec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);*/
 
-        intent = getIntent();
-        nmec = intent.getStringExtra(LoginActivity.EXTRA_NMEC);
-        createUserObjects();
+        amc = new AllMightyCreator(nmec);
 
         //List of NextEvaluations and NextClasses
         //setListViews();
     }
 
 
-
-
     //-------------------------------------Getters---------------
-    public static String getCurrentYear() {
-        return currentYear;
-    }
 
-    public static String getnMec() {
-        if (getUser()!=null){
-            return MainActivity.getUser().getNmec();
-        } else {
-            return intent.getStringExtra(LoginActivity.EXTRA_NMEC);
-        }
-    }
 
-    public static Boolean getHasCourses() {
-        return hasCourses;
-    }
-
-    public static ObjectStudent getUser() {
-        return user;
-    }
-
-    public static ObjectDegree getUserDegree() {
-        return userDegree;
+    public static void setNmec(String nmec) {
+        MainActivity.nmec = nmec;
     }
 
     @Override
@@ -112,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.logOut:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -149,70 +125,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    private void createUserObjects() {
-        Log.d(TAG, "NMec creating student: " + getnMec());
-        getDb().collection("Students").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if (document.getId().equals("St" + getnMec())){
-                                user = document.toObject(ObjectStudent.class);
-                                Log.d(TAG,user.toString());
 
-                                createUserDegreeObject();
-
-                                createUserCoursesObject();
-                            }
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO To do
-            }
-        });
-
-    }
-
-    private void createUserDegreeObject() {
-        getDb().collection("Degrees").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if (user.getDegrees().contains(document.getId())) {
-                                userDegree = document.toObject(ObjectDegree.class);
-                                Log.d(TAG, userDegree.toString());
-                            }
-
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO To do
-            }
-        });
-    }
-
-    private void createUserCoursesObject(){
-        getDb().collection("Students/St" + getUser().getNmec() + "/Courses").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        hasCourses=false;
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                            hasCourses=true;
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-    }
 
 
     //-------------------------------Other shit-------------------------------

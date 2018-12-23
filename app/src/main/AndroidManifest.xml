@@ -5,6 +5,7 @@
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -39,7 +40,8 @@
             android:name=".ResponsibleEditEvaluationsActivity"
             android:label="@string/title_activity_responsible_edit_evaluations"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ListIndividualCourse"></activity>
+        <activity android:name=".ListIndividualCourse" />
+        <activity android:name=".CalendarTest"></activity>
     </application>
 
 </manifest>

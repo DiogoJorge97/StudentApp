@@ -64,36 +64,30 @@ public class ResponsibleEditActivity extends AppCompatActivity {
 
 
     private void findCourses() {
-        MainActivity.getDb().collection("/Degrees/" + MainActivity.getUserDegree().getID() + "/Courses").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (DocumentSnapshot document : queryDocumentSnapshots) {
-                            Map<String, Object> data = document.getData();
-                            String name = "";
-                            String id = "";
-                            for (Map.Entry<String, Object> entry : data.entrySet()) {
+        AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Map<String, Object> data = document.getData();
+                        String name = "";
+                        String id = "";
+                        for (Map.Entry<String, Object> entry : data.entrySet()) {
 
-                                String key = entry.getKey();
-                                Object value = entry.getValue();
-                                if (key.equals("Name")) {
-                                    name = value.toString();
-                                } else if (key.equals("ID")) {
-                                    id = value.toString();
-                                }
+                            String key = entry.getKey();
+                            Object value = entry.getValue();
+                            if (key.equals("Name")) {
+                                name = value.toString();
+                            } else if (key.equals("ID")) {
+                                id = value.toString();
                             }
-                            coursesList.put(id, name);
-
                         }
-                        populateCourses();
+                        coursesList.put(id, name);
 
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO to do
-            }
-        });
+                    populateCourses();
+
+                }).addOnFailureListener(e -> {
+                    //TODO to do
+                });
     }
 
 
@@ -138,7 +132,7 @@ public class ResponsibleEditActivity extends AppCompatActivity {
                 Log.d(TAG, "Tag: " + viewTag);
                 editionID.clear();
 
-                MainActivity.getDb().collection("/Degrees/" + MainActivity.getUserDegree().getID() + "/Courses/" + courseID + "/Editions")
+                AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + courseID + "/Editions")
                         .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

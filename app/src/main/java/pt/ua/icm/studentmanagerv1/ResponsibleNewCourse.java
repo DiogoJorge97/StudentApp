@@ -66,18 +66,11 @@ public class ResponsibleNewCourse extends AppCompatActivity {
         ectsEdit = findViewById(R.id.ects_edit);
 
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                saveToFirestore();
-            }
-        });
+        mAddButton.setOnClickListener(v -> saveToFirestore());
 
-        mOpenDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ResponsibleNewCourse.this, ResponsibleNewEdition.class);
-                startActivityForResult(intent, TEXT_REQUEST);
-            }
+        mOpenDialog.setOnClickListener(view -> {
+            Intent intent = new Intent(ResponsibleNewCourse.this, ResponsibleNewEdition.class);
+            startActivityForResult(intent, TEXT_REQUEST);
         });
 
 
@@ -89,7 +82,7 @@ public class ResponsibleNewCourse extends AppCompatActivity {
 
         ArrayList<String> selected = ResponsibleNewEdition.getSelectedItems();
         if (selected.isEmpty()) {
-            Toast.makeText(this, "Selecione uma ou mais edições", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Selecione uma ou mais edições", Toast.LENGTH_SHORT).show();
         } else {
             for (String elem : selected) {
                 String yearTemp = elem.split(" ")[0];
@@ -117,22 +110,14 @@ public class ResponsibleNewCourse extends AppCompatActivity {
             userData.put(KEY_EDITIONS, editions);
             Log.d(TAG, userData.toString());
 
-            MainActivity.getDb().document("Degrees/" + MainActivity.getUserDegree().getID() + "/Courses/" + idEdit.getText().toString()).set(userData)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(ResponsibleNewCourse.this, "UC criada", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(ResponsibleNewCourse.this, MainActivity.class);
-                            createDocuments();
-                            startActivity(intent);
-                        }
+            AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + idEdit.getText().toString()).set(userData)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(ResponsibleNewCourse.this, "UC criada", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ResponsibleNewCourse.this, MainActivity.class);
+                        createDocuments();
+                        startActivity(intent);
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "ERROR");
-                        }
-                    });
+                    .addOnFailureListener(e -> Log.d(TAG, "ERROR"));
         }
     }
 
@@ -141,7 +126,7 @@ public class ResponsibleNewCourse extends AppCompatActivity {
         notEmpty.put("isEmpty", "false");
 
         for (String elem: ResponsibleNewEdition.getSelectedItems()){
-            MainActivity.getDb().document("Degrees/" + MainActivity.getUserDegree().getID() + "/Courses/" + idEdit.getText().toString() + "/Editions/" + elem).set(notEmpty);
+            AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + idEdit.getText().toString() + "/Editions/" + elem).set(notEmpty);
 
         }
     }

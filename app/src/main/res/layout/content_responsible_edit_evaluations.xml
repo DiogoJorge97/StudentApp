@@ -26,69 +26,33 @@
                 android:id="@+id/textView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Regente"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/director_name_text"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:layout_marginStart="24dp"
+            <Button
+                android:id="@+id/director_edit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:hint="Nome"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toStartOf="@+id/director_name_btn"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="Editar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
-
-            <Button
-                android:id="@+id/director_name_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Guardar"
-                app:layout_constraintBaseline_toBaselineOf="@+id/director_name_text"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <Button
-                android:id="@+id/director_email_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Guardar"
-                app:layout_constraintBaseline_toBaselineOf="@+id/director_email_text"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <EditText
-                android:id="@+id/director_email_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:hint="E-mail"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toStartOf="@+id/director_email_btn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/director_name_text" />
 
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Avaliações"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/director_email_text" />
+                app:layout_constraintTop_toBottomOf="@+id/director_edit_btn" />
 
 
             <LinearLayout
@@ -101,25 +65,46 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView21">
 
-                <android.support.design.widget.BottomNavigationView
-                    android:id="@+id/navigationSeas"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/windowBackground"
-                    app:menu="@menu/evaluation_type" />
+                    android:orientation="horizontal">
 
-                <FrameLayout
-                    android:id="@+id/parent_evaluations"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toTopOf="@+id/navigation"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    <Button
+                        android:id="@+id/button5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
 
-                </FrameLayout>
+                    <Button
+                        android:id="@+id/button3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                    <Button
+                        android:id="@+id/button4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+                </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/director_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="Sem dados"
+                android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/director_edit_btn"
+                app:layout_constraintEnd_toStartOf="@+id/director_edit_btn"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </android.support.constraint.ConstraintLayout>

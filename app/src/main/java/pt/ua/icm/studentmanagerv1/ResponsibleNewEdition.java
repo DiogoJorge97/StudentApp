@@ -73,7 +73,7 @@ public class ResponsibleNewEdition extends AppCompatActivity {
 
         selectedItems = new ArrayList<>();
         listOfAvalilabreYears = new ArrayList<>();
-        listOfAvalilabreYears.addAll(MainActivity.getUserDegree().getDirectors().keySet());
+        listOfAvalilabreYears.addAll(AllMightyCreator.getUserDegree().getDirectors().keySet());
         Collections.sort(listOfAvalilabreYears);
         String[] semesterArray = {"Primeiro Semestre", "Segundo Semestre", "Semestre Especial"};
 

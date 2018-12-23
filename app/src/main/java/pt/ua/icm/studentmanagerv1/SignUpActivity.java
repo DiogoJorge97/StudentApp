@@ -36,6 +36,7 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    public static final String EXTRA_NMEC = "ExtraNmec";
     private FirebaseAuth mAuth;
     private static final String TAG = "MyTagAC";
 
@@ -163,9 +164,10 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(SignUpActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        intent.putExtra("Nmec", nMec);
-                        intent.putExtra(EXTRA_HASCOURSES, "false");
+/*                        intent.putExtra(EXTRA_NMEC, nMec);
+                        intent.putExtra(EXTRA_HASCOURSES, "false");*/
                         startActivity(intent);
+                        MainActivity.setNmec(nMec);
 
                     }
                 })
@@ -180,7 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //Methods to retrieve available Degrees
     private void lookInFirestore() {
-        MainActivity.getDb().collection("Degrees").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        AllMightyCreator.getDb().collection("Degrees").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

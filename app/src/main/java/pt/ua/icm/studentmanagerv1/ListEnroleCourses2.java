@@ -48,6 +48,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedItems = intent.getStringArrayListExtra(ListEnroleCourses.EXTRA_COURSES);
+
         Log.d(TAG, "Selected Items: " + selectedItems.toString());
 
 
@@ -65,7 +66,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
     //TODO Dinamic Degree
     private void loadAvailableCourses() {
-        MainActivity.getDb().collection("Degrees/" + MainActivity.getUserDegree().getID() + "/Courses").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
@@ -160,7 +161,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
             final String id = elem.getKey().toString();
             final String edition = elem.getValue().toString();
 
-            MainActivity.getDb().collection("Degrees/" + MainActivity.getUserDegree().getID() + "/Courses")
+            AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses")
                     .whereEqualTo("ID", id)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -171,6 +172,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                                 saveStudentSubscription(id, edition, courseTemp);
 
                             }
+                            AllMightyCreator.setHasCourses(true);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -195,7 +197,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
     private void saveStudentSubscription(String id, String edition, ObjectCourse course) {
         course.setEmptyEditions();
         course.setDocumentId(edition + "#" + id );
-        MainActivity.getDb().document("Students/St" + MainActivity.getnMec() + "/Courses/" + edition + "#" + id ).set(course)
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(course)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

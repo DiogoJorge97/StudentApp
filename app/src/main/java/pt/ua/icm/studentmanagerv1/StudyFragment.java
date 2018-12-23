@@ -1,20 +1,39 @@
 package pt.ua.icm.studentmanagerv1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class StudyFragment extends android.support.v4.app.Fragment {
 
+    Button button;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_study, null);
+
+
+        View view =  inflater.inflate(R.layout.fragment_study, null);
+
+        button = view.findViewById(R.id.button2);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CalendarTest.class);
+                startActivity(intent);
+
+            }
+        });
+
+        return view;
     }
 
 

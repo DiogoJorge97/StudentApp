@@ -58,16 +58,14 @@ public class ListEnroleCourses extends AppCompatActivity {
 
     //TODO Dinamic Degree
     private void loadAvailableCourses() {
-        MainActivity.getDb().collection("Degrees/" + MainActivity.getUserDegree().getID() +"/Courses").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Log.d(TAG,"Course: " + document.getData().toString());
-                    ObjectCourse course = document.toObject(ObjectCourse.class);
-                    coursesNames.add(course.getName());
-                }
-                setListView();
+        Log.d(TAG, "Curso: " + AllMightyCreator.getUserDegree().getID());
+        AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() +"/Courses").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                Log.d(TAG,"Course: " + document.getData().toString());
+                ObjectCourse course = document.toObject(ObjectCourse.class);
+                coursesNames.add(course.getName());
             }
+            setListView();
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

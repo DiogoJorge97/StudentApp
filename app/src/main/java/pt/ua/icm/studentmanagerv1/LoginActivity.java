@@ -154,14 +154,14 @@ public class LoginActivity extends AppCompatActivity {
     private void continueToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
 
-        intent.putExtra(EXTRA_NMEC, nmec);
+/*        intent.putExtra(EXTRA_NMEC, nmec);
+        String bl =  Boolean.toString(checkIfStudentHasCourses(nmec));
+        intent.putExtra(EXTRA_HASCOURSES, bl);
 
         Log.d("MyTag3", "N mec: " + nmec);
-
-        String bl =  Boolean.toString(checkIfStudentHasCourses(nmec));
-        Log.d("MyTag3", bl);
-        intent.putExtra(EXTRA_HASCOURSES, bl);
+        Log.d("MyTag3", bl);*/
         startActivity(intent);
+        MainActivity.setNmec(nmec);
     }
 
 

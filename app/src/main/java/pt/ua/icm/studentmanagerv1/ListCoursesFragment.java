@@ -43,7 +43,7 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view;
-        Boolean hasCourses = MainActivity.getHasCourses();
+        Boolean hasCourses = AllMightyCreator.getHasCourses();
         Log.d(TAG, "HasCourses: " + Boolean.toString(hasCourses));
         if (!hasCourses) {
             view = inflater.inflate(R.layout.fragment_classes_setup, null);
@@ -143,7 +143,7 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
 
 
     public void loadClasses() {
-        MainActivity.getDb().collection("Students/St" + MainActivity.getnMec() + "/Courses").orderBy("documentId", Query.Direction.DESCENDING).get()
+        AllMightyCreator.getDb().collection("Students/St" + AllMightyCreator.getnMec() + "/Courses").orderBy("documentId", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
