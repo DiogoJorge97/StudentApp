@@ -182,15 +182,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     //Methods to retrieve available Degrees
     private void lookInFirestore() {
-        AllMightyCreator.getDb().collection("Degrees").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    CoursesToPrint = getAllCourses(task);
-                    spinner();
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
+        AllMightyCreator.getDb().collection("Degrees").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                CoursesToPrint = getAllCourses(task);
+                spinner();
+            } else {
+                Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
     }

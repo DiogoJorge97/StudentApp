@@ -8,19 +8,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,32 +26,30 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
 
     //widgets
     ListView listView;
-    List<String> coursesDocIdList;
-    List<String> coursesNameList;
-    Map<String, List<String>> coursesNamesMap;
+/*    List<String> coursesDocIdList;
+    List<String> coursesNameList;*/
+    Map<String, String> coursesNamesMap;
+/*
     List<String> coursesNewName;
+*/
 
-    private static ArrayList<String> selectedItems;
 
 
     String TAG = "DTag";
-    private String EXTRA_COURSE_SELECTION = "ExtraCourseSelection";
+    public static String EXTRA_COURSE_SELECTION = "ExtraCourseSelection";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view;
         Boolean hasCourses = AllMightyCreator.getHasCourses();
-        Log.d(TAG, "HasCourses: " + Boolean.toString(hasCourses));
+        //Log.d(TAG, "HasCourses: " + Boolean.toString(hasCourses));
         if (!hasCourses) {
             view = inflater.inflate(R.layout.fragment_classes_setup, null);
             Button button = view.findViewById(R.id.start_setup);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ListEnroleCourses.class);
-                    startActivity(intent);
-                }
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), ListEnroleCourses.class);
+                startActivity(intent);
             });
             return view;
         } else {
@@ -65,11 +61,46 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
 
         loadClasses();
         return view;
-
     }
 
 
-    private void setListView() {
+    public void loadClasses() {
+        AllMightyCreator.getDb().collection("Students/St" + AllMightyCreator.getnMec() + "/Courses").orderBy("documentId", Query.Direction.DESCENDING).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+/*                    coursesDocIdList = new ArrayList<>();
+                    coursesNameList = new ArrayList<>();*/
+                    coursesNamesMap = new HashMap<>();
+
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Map<String, Object> data = document.getData();
+                        String documentId = "";
+                        String name = "";
+                        for (Map.Entry<String, Object> entry : data.entrySet()) {
+                            String key = entry.getKey();
+                            Object value = entry.getValue();
+                            Log.d(TAG, key);
+                            Log.d(TAG, value.toString());
+
+                            if (key.equals("documentId")) {
+                                //coursesDocIdList.add(value.toString());
+                                documentId = value.toString();
+                            }
+                            if (key.equals("name")) {
+                                //coursesNameList.add((value.toString()));
+                                name = value.toString();
+                            }
+                        }
+                        coursesNamesMap.put(name, documentId);
+                    }
+                    setListView();
+
+                }).addOnFailureListener(e -> {
+
+        });
+    }
+
+
+    private void setListView() {/*
         coursesNewName = new ArrayList<>();
         final List<String> stopSelect = new ArrayList<>();
         Log.d(TAG, "CourseNameList: " + coursesDocIdList.toString());
@@ -80,14 +111,14 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
         stopSelect.add(lastY);
         stopSelect.add("   " + lastS);
 
-        for (String elem: coursesDocIdList){
+        for (String elem : coursesDocIdList) {
             String currentY = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[0];
             String currentS = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[1];
             String currentID = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[2];
-            if (currentY.equals(lastY)){
-                if (currentS.equals(lastS)){
-                    lastY=currentY;
-                    lastS=currentS;
+            if (currentY.equals(lastY)) {
+                if (currentS.equals(lastS)) {
+                    lastY = currentY;
+                    lastS = currentS;
                     coursesNewName.add(elem);
                     continue;
                 }
@@ -108,31 +139,32 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
         Log.d(TAG, coursesNewName.toString());
         Log.d(TAG, stopSelect.toString());
 
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.rowlayout, R.id.Item, coursesNewName);
-        listView.setAdapter(adapter);
-
         final List<Integer> positOfStop = new ArrayList<>();
         int counter = 0;
         int bigCounter = 0;
-        for (String elem: coursesNewName){
-            if (stopSelect.contains(elem)){
+        for (String elem : coursesNewName) {
+            if (stopSelect.contains(elem)) {
                 positOfStop.add(coursesNewName.indexOf(elem));
-            } else{
+            } else {
                 coursesNewName.set(bigCounter, "      " + coursesNameList.get(counter));
                 counter++;
             }
             bigCounter++;
         }
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.rowlayout, R.id.Item, coursesNewName);
+        listView.setAdapter(adapter);
+        */
+
+        List<String> nameList = new ArrayList<>();
+        nameList.addAll(coursesNamesMap.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.rowlayout, R.id.Item, nameList);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             String selectedItem = ((TextView) view).getText().toString();
-/*            for(Integer it : positOfStop) {
-                listView.getChildAt(it).setEnabled(false);
-                listView.getChildAt(it).setClickable(false);
-            }*/
+            selectedItem = coursesNamesMap.get(selectedItem);
+
             Intent intent = new Intent(getActivity(), ListIndividualCourse.class);
             intent.putExtra(EXTRA_COURSE_SELECTION, selectedItem);
             startActivity(intent);
@@ -140,44 +172,6 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
 
 
     }
-
-
-    public void loadClasses() {
-        AllMightyCreator.getDb().collection("Students/St" + AllMightyCreator.getnMec() + "/Courses").orderBy("documentId", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        coursesDocIdList = new ArrayList<>();
-                        coursesNameList = new ArrayList<>();
-                        for (DocumentSnapshot document : queryDocumentSnapshots) {
-                            Map<String, Object> data = document.getData();
-                            for (Map.Entry<String, Object> entry : data.entrySet()) {
-                                String key = entry.getKey();
-                                Object value = entry.getValue();
-                                Log.d("MyTag4", key);
-                                if (key.equals("documentId")) {
-                                    coursesDocIdList.add(value.toString());
-                                }
-                                if (key.equals("name")){
-                                    coursesNameList.add((value.toString()));
-                                }
-                            }
-                        }
-                        setListView();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-    }
-
-
-
-
-
 }
 
 

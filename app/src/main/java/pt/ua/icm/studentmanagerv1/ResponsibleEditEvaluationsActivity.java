@@ -2,10 +2,8 @@ package pt.ua.icm.studentmanagerv1;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +17,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.text.ParseException;
@@ -35,10 +30,12 @@ import java.util.Map;
 public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
     private static Intent intent;
-    private static ObjectCourseEdition objectCourseEdition;
 
-    private TextView directorName;
+    private TextView directorNameTV;
     private Button editDirector;
+
+    private String directorName;
+    private String directorEmail;
 
 
 
@@ -58,13 +55,14 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_responsible_edit_evaluations);
 
-
+        directorName = "";
+        directorEmail="";
 
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        directorName = findViewById(R.id.director_name);
+        directorNameTV = findViewById(R.id.director_name);
         editDirector = findViewById(R.id.director_edit_btn);
 
 
@@ -73,7 +71,7 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
         subPath = intent.getStringExtra(ResponsibleEditActivity.EXTRA_SELECTED_EDITION);
 
 
-        createEditionObject();
+        directorData();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> createNewEval());
@@ -86,13 +84,56 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
     }
 
+
+
+
+
+    private void directorData() {
+        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Map<String, Object> data = documentSnapshot.getData();
+                    for (Map.Entry<String, Object> entry : data.entrySet()){
+                        String key = entry.getKey();
+                        String value = entry.getValue().toString();
+                        if (key.equals("E-mail")){
+                            directorEmail = value;
+                        } else if (key.equals("Name")) {
+                            directorName = value;
+                            directorNameTV.setText(directorName);
+                        }
+
+                    }
+                }).addOnFailureListener(e -> {
+
+                });
+
+    }
+
+
+
     private void editDirectorDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ResponsibleEditEvaluationsActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.edit_director, null);
 
+        TextView directorNameEditTV = mView.findViewById(R.id.director_name_edit);
+        TextView directorEmailEditTV = mView.findViewById(R.id.director_email_edit);
+
+        directorNameEditTV.setText(directorName);
+        directorEmailEditTV.setText(directorEmail);
+
+
+
 
         mBuilder.setPositiveButton("Guardar", (dialog, id) -> {
-            // FIRE ZE MISSILES!
+            directorName = directorNameEditTV.getText().toString();
+            directorEmail = directorEmailEditTV.getText().toString();
+            Map <String, String> directorData = new HashMap<>();
+            directorData.put("Name", directorName);
+            directorData.put("E-mail", directorEmail);
+            directorNameTV.setText(directorName);
+
+            AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath)
+                    .set(directorData);
         }).setNegativeButton("Cancelar", (dialog, id) -> {
             // User cancelled the dialog
         });
@@ -103,36 +144,7 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
     }
 
 
-    public static ObjectCourseEdition getObjectCourseEdition() {
-        return objectCourseEdition;
-    }
-
-
-    private void createEditionObject() {
-        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath)
-                .get().addOnSuccessListener(documentSnapshot -> {
-                    Log.e(TAG, documentSnapshot.getData().toString());
-
-                    objectCourseEdition = documentSnapshot.toObject(ObjectCourseEdition.class);
-                    populateDirector(objectCourseEdition);
-                })
-                .addOnFailureListener(e -> {
-
-                });
-    }
-
-    private void populateDirector(ObjectCourseEdition couseEdition) {
-        Log.d(TAG, couseEdition.toString());
-        if (couseEdition.getDirector() != null) {
-            directorName.setText(objectCourseEdition.getDirector().get(0));
-        } else {
-            Log.d(TAG, "No director");
-        }
-    }
-
     private void createNewEval() {
-
-
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ResponsibleEditEvaluationsActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.new_evaluation, null);
 
@@ -191,16 +203,14 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
     };
 
     private void saveNewEvaluation(String name, String percentage, String date) {
-
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date ndate = null;
         try {
-
             ndate = formatter.parse(date);
-
         } catch (ParseException e) {
             Log.d(TAG,e.toString());
         }
+
         Map<String, Object> evaluationData = new HashMap<>();
         evaluationData.put("Date", ndate);
         evaluationData.put("Name",name);
@@ -210,18 +220,12 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
         evaluation.put(name, evaluationData);
 
         Map<String,Object> practicalEvaluation = new HashMap<>();
-        practicalEvaluation.put("Practical Evaluation", evaluation);
-
-/*        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath + "/Evaluations/Continuous Evaluation")
-                .get().addOnSuccessListener(documentSnapshot -> {
-                    Log.d(TAG, documentSnapshot.getData().toString());
-                    ObjectEvaluation course = documentSnapshot.toObject(ObjectEvaluation.class);
-                    Log.d(TAG,course.getName());
-                    Log.d(TAG,course.getPracticalEvaluation().toString());
-                });*/
+        //TODO forcing practical evaluation
+        practicalEvaluation.put("PracticalEvaluation", evaluation);
 
 
         //TODO Forcing continuous Evaluation
+        //TODO Change to use ObjectEvaluation
         AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath + "/Evaluations/Continuous Evaluation")
                 .set(practicalEvaluation, SetOptions.merge()).addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Yupi", Toast.LENGTH_SHORT).show();

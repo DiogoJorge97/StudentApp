@@ -47,11 +47,7 @@ public class ListEnroleCourses extends AppCompatActivity {
         loadAvailableCourses();
 
         nextStep = findViewById(R.id.next_step_btn);
-        nextStep.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                saveChanges();
-            }
-        });
+        nextStep.setOnClickListener(v -> saveChanges());
 
     }
 
@@ -79,15 +75,12 @@ public class ListEnroleCourses extends AppCompatActivity {
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.rowlayout_check, R.id.checkItem, coursesNames);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = ((TextView) view).getText().toString();
-                if (selectedItems.contains(selectedItem)) {
-                    selectedItems.remove(selectedItem);
-                } else {
-                    selectedItems.add(selectedItem);
-                }
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedItem = ((TextView) view).getText().toString();
+            if (selectedItems.contains(selectedItem)) {
+                selectedItems.remove(selectedItem);
+            } else {
+                selectedItems.add(selectedItem);
             }
         });
     }

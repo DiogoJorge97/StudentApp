@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
     private LinearLayout mLinear;
     private Map<String, String> valuesToDB;
     private Button save;
+    private Map<String, String> directorData;
 
     private final String TAG = "DTag ListEnroleCourses2";
 
@@ -50,7 +52,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
         selectedItems = intent.getStringArrayListExtra(ListEnroleCourses.EXTRA_COURSES);
 
         Log.d(TAG, "Selected Items: " + selectedItems.toString());
-
+        directorData = new HashMap<>();
 
         loadAvailableCourses();
 
@@ -164,51 +166,88 @@ public class ListEnroleCourses2 extends AppCompatActivity {
             AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses")
                     .whereEqualTo("ID", id)
                     .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                ObjectCourse courseTemp = document.toObject(ObjectCourse.class);
-                                saveStudentSubscription(id, edition, courseTemp);
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            ObjectCourse courseTemp = document.toObject(ObjectCourse.class);
+                            saveStudentSubscription(id, edition, courseTemp);
 
-                            }
-                            AllMightyCreator.setHasCourses(true);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //TODO complete
+                        AllMightyCreator.setHasCourses(true);
+                    }).addOnFailureListener(e -> {
+                        //TODO complete
+                    });
+
+            AllMightyCreator.getDb().document("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1])
+                    .get().addOnSuccessListener(documentSnapshot -> {
+                        for (Map.Entry<String, Object> entry: documentSnapshot.getData().entrySet()){
+                            String key = entry.getKey();
+                            String value = entry.getValue().toString();
+                            if (key.equals("E-mail")){
+                                directorData.put(key, value);
+                            } else if (key.equals("Name")){
+                                directorData.put(key, value);
+                            }
+
                 }
+                        saveDirectorData(edition, id, directorData);
+
+                }).addOnFailureListener(e -> {
+                });
+
+
+
+            //TODO Continuous Evaluation forced
+            String cont = "Continuous Evaluation";
+            Log.d(TAG, "/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1] + "/Evaluations/");
+            AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1] + "/Evaluations/")
+                    .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            if (documentSnapshot.getId().equals(cont)){
+                                ObjectEvaluation objectEvaluation = documentSnapshot.toObject(ObjectEvaluation.class);
+                                Log.d(TAG, "Ev: " + objectEvaluation.toString());
+                                saveStudentEdition(objectEvaluation, cont, edition, id);
+                            }
+                        }
+
+            } ).addOnFailureListener(e -> {
+                Log.d(TAG, "Damn Fail");
             });
-
-
 
 
         }
 
-        //Com as horas de sono que tenho em cima a melhor maneira de fazer isto parece-me
-        //ser criar um documento semelhante ao que exixste em '/Degrees/9119/Courses/45424/Editions/2018-2019'
-        //mas com o nome igual ao 'editionId' (value do mapa), isto na comissão de curso
-        // Quando o aluno se inscreve à edição copia esse documento e acrescenta-se uns campos pessoais (notas, estudo etc)
 
-        Log.d(TAG,valuesToDB.toString());
+        Log.d(TAG,"VTDB: " + valuesToDB.toString());
+    }
+
+    private void saveDirectorData(String edition, String id, Map<String, String> directorData) {
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(directorData, SetOptions.merge());
+    }
+
+    private void saveStudentEdition(ObjectEvaluation objectEvaluation, String evaluationType, String edition, String id) {
+            objectEvaluation.setAllGrades();
+
+
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id + "/Evaluations/" + evaluationType)
+                .set(objectEvaluation)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "YES: " + objectEvaluation.toString());
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "WHY?");
+
+                });
     }
 
     private void saveStudentSubscription(String id, String edition, ObjectCourse course) {
         course.setEmptyEditions();
         course.setDocumentId(edition + "#" + id );
-        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(course)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Aluno inscrito");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Aluno não inscrito");
-
-            }
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(course,SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Aluno inscrito");
+                }).addOnFailureListener(e -> {
+                    Log.d(TAG, "Aluno não inscrito");
         });
 
         Intent intent = new Intent(ListEnroleCourses2.this, MainActivity.class);
