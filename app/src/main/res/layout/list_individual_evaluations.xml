@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/ev_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="Projeto de Grupo"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ev_percentage"
+        />
+
+    <TextView
+        android:id="@+id/ev_time_studied"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:text="14h30m"
+        app:layout_constraintBottom_toBottomOf="@+id/ev_percentage"
+        app:layout_constraintEnd_toStartOf="@+id/ev_grade"
+        app:layout_constraintTop_toTopOf="@+id/ev_name" />
+
+    <TextView
+        android:id="@+id/ev_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="40%"
+        app:layout_constraintStart_toEndOf="@+id/ev_date"
+        app:layout_constraintTop_toBottomOf="@+id/ev_name" />
+
+    <TextView
+        android:id="@+id/ev_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:text="15.6"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ev_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ev_name" />
+
+    <TextView
+        android:id="@+id/ev_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:text="25/12"
+        app:layout_constraintStart_toStartOf="@+id/ev_name"
+        app:layout_constraintTop_toBottomOf="@+id/ev_name" />
+
+
+</android.support.constraint.ConstraintLayout>

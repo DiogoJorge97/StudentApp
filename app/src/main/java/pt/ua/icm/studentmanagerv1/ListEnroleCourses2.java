@@ -56,12 +56,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
         loadAvailableCourses();
 
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveToFirebase();
-            }
-        });
+        save.setOnClickListener(view -> saveToFirebase());
 
     }
 
@@ -133,7 +128,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
     private void chooseSemester(final ObjectCourse course, final String year, Spinner spinner2, ArrayAdapter<String> spinnerArrayAdapter2, List<String> semesters) {
         String[] tempArray = course.getEditions().get(year).toArray(new String[course.getEditions().get(year).size()]);
 
-        for (String el: tempArray){
+        for (String el : tempArray) {
             semesters.add(el);
         }
         spinnerArrayAdapter2.notifyDataSetChanged();
@@ -142,24 +137,25 @@ public class ListEnroleCourses2 extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, android.view.View view, int i, long l) {
                 String semester = adapterView.getItemAtPosition(i).toString();
-                String editionId =  year+"#"+semester;
+                String editionId = year + "#" + semester;
                 createFinalData(course.getID(), editionId);
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {
                 // TODO Auto-generated method stub
             }
-        });    }
+        });
+    }
 
     private void createFinalData(String id, String editionId) {
-        if (valuesToDB.containsKey(id)){
+        if (valuesToDB.containsKey(id)) {
             valuesToDB.remove(id);
         }
-        valuesToDB.put(id,editionId);
+        valuesToDB.put(id, editionId);
     }
 
     private void saveToFirebase() {
-        for (Map.Entry elem: valuesToDB.entrySet()){
+        for (Map.Entry elem : valuesToDB.entrySet()) {
             final String id = elem.getKey().toString();
             final String edition = elem.getValue().toString();
 
@@ -174,42 +170,40 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                         }
                         AllMightyCreator.setHasCourses(true);
                     }).addOnFailureListener(e -> {
-                        //TODO complete
-                    });
+                //TODO complete
+            });
 
-            AllMightyCreator.getDb().document("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1])
+            AllMightyCreator.getDb().document("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " " + edition.split("#")[1])
                     .get().addOnSuccessListener(documentSnapshot -> {
-                        for (Map.Entry<String, Object> entry: documentSnapshot.getData().entrySet()){
-                            String key = entry.getKey();
-                            String value = entry.getValue().toString();
-                            if (key.equals("E-mail")){
-                                directorData.put(key, value);
-                            } else if (key.equals("Name")){
-                                directorData.put(key, value);
-                            }
+                for (Map.Entry<String, Object> entry : documentSnapshot.getData().entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue().toString();
+                    if (key.equals("E-mail")) {
+                        directorData.put(key, value);
+                    } else if (key.equals("Name")) {
+                        directorData.put(key, value);
+                    }
 
                 }
-                        saveDirectorData(edition, id, directorData);
+                saveDirectorData(edition, id, directorData);
 
-                }).addOnFailureListener(e -> {
-                });
-
+            }).addOnFailureListener(e -> {
+            });
 
 
             //TODO Continuous Evaluation forced
             String cont = "Continuous Evaluation";
-            Log.d(TAG, "/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1] + "/Evaluations/");
-            AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " "  + edition.split("#")[1] + "/Evaluations/")
+            Log.d(TAG, "/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " " + edition.split("#")[1] + "/Evaluations/");
+            AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " " + edition.split("#")[1] + "/Evaluations/")
                     .get().addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                            if (documentSnapshot.getId().equals(cont)){
-                                ObjectEvaluation objectEvaluation = documentSnapshot.toObject(ObjectEvaluation.class);
-                                Log.d(TAG, "Ev: " + objectEvaluation.toString());
-                                saveStudentEdition(objectEvaluation, cont, edition, id);
-                            }
-                        }
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    if (documentSnapshot.getId().equals(cont)) {
+                        ObjectEvaluationType objectEvaluation = documentSnapshot.toObject(ObjectEvaluationType.class);
+                        saveStudentEdition(objectEvaluation, cont, edition, id);
+                    }
+                }
 
-            } ).addOnFailureListener(e -> {
+            }).addOnFailureListener(e -> {
                 Log.d(TAG, "Damn Fail");
             });
 
@@ -217,15 +211,16 @@ public class ListEnroleCourses2 extends AppCompatActivity {
         }
 
 
-        Log.d(TAG,"VTDB: " + valuesToDB.toString());
+        Log.d(TAG, "VTDB: " + valuesToDB.toString());
     }
 
     private void saveDirectorData(String edition, String id, Map<String, String> directorData) {
-        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(directorData, SetOptions.merge());
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id).set(directorData, SetOptions.merge());
     }
 
-    private void saveStudentEdition(ObjectEvaluation objectEvaluation, String evaluationType, String edition, String id) {
-            objectEvaluation.setAllGrades();
+    private void saveStudentEdition(ObjectEvaluationType objectEvaluation, String evaluationType, String edition, String id) {
+        objectEvaluation.setAllGradesToDefault();
+
 
 
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id + "/Evaluations/" + evaluationType)
@@ -242,12 +237,12 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
     private void saveStudentSubscription(String id, String edition, ObjectCourse course) {
         course.setEmptyEditions();
-        course.setDocumentId(edition + "#" + id );
-        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id ).set(course,SetOptions.merge())
+        course.setDocumentId(edition + "#" + id);
+        AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id).set(course, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Aluno inscrito");
                 }).addOnFailureListener(e -> {
-                    Log.d(TAG, "Aluno não inscrito");
+            Log.d(TAG, "Aluno não inscrito");
         });
 
         Intent intent = new Intent(ListEnroleCourses2.this, MainActivity.class);

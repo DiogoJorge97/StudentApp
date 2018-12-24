@@ -221,7 +221,7 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
         Map<String,Object> practicalEvaluation = new HashMap<>();
         //TODO forcing practical evaluation
-        practicalEvaluation.put("PracticalEvaluation", evaluation);
+        practicalEvaluation.put("PracticalComponent", evaluation);
 
 
         //TODO Forcing continuous Evaluation

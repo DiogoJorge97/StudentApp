@@ -78,8 +78,8 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
                         for (Map.Entry<String, Object> entry : data.entrySet()) {
                             String key = entry.getKey();
                             Object value = entry.getValue();
-                            Log.d(TAG, key);
-                            Log.d(TAG, value.toString());
+                            //Log.d(TAG, key);
+                            //Log.d(TAG, value.toString());
 
                             if (key.equals("documentId")) {
                                 //coursesDocIdList.add(value.toString());
