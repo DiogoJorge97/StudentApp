@@ -22,16 +22,7 @@ public class StudyFragment extends android.support.v4.app.Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_study, null);
 
-        button = view.findViewById(R.id.button2);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CalendarTest.class);
-                startActivity(intent);
-
-            }
-        });
 
         return view;
     }
