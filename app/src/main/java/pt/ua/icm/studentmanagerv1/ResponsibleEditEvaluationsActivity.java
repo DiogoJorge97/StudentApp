@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,7 +39,12 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
     private String directorName;
     private String directorEmail;
+    private String component;
+    private String season;
+    private Button dateButton;
+    private String seasonName;
 
+    Map<String, String> possibleComponents;
 
 
     private SimpleDateFormat mSimpleDateFormat;
@@ -47,8 +55,9 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
     static String subPath;
     private Calendar mCalendar;
+    private Spinner seasonSpinner;
+    private Spinner componentSpinner;
 
-    TextView mDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,7 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
         directorNameTV = findViewById(R.id.director_name);
         editDirector = findViewById(R.id.director_edit_btn);
+
 
 
         setSupportActionBar(toolbar);
@@ -150,9 +160,14 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 
         EditText mName = mView.findViewById(R.id.name_edit);
         EditText mPercentage = mView.findViewById(R.id.percentage_edit);
-        Button  dateButton = mView.findViewById(R.id.date_btn);
-        mDateTextView = mView.findViewById(R.id.date_text_view);
+        dateButton = mView.findViewById(R.id.date_btn);
+        seasonSpinner = mView.findViewById(R.id.season_spinner);
+        componentSpinner = mView.findViewById(R.id.component_spinner);
+
         dateButton.setOnClickListener(textListener);
+        componentSpinner();
+        seasonSpinner();
+
 
         mSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm", Locale.getDefault());
 
@@ -198,7 +213,7 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mCalendar.set(Calendar.MINUTE, minute);
-            mDateTextView.setText(mSimpleDateFormat.format(mCalendar.getTime()));
+            dateButton.setText(mSimpleDateFormat.format(mCalendar.getTime()));
         }
     };
 
@@ -216,25 +231,110 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
         evaluationData.put("Name",name);
         evaluationData.put("Percentage",percentage);
 
+        Map<String, String> componentData = new HashMap<>();
+        for (Map.Entry entry: possibleComponents.entrySet()) {
+            if (entry.getValue().toString().equals(component)){
+                String abbreviation = "";
+                for (char ch: entry.getKey().toString().toCharArray()) {
+                    if(Character.isUpperCase(ch)){
+                        abbreviation += ch;
+                    }
+                }
+                evaluationData.put("Component",abbreviation);
+            }
+        }
+
+
+
+
+
         Map<String,Object> evaluation = new HashMap<>();
         evaluation.put(name, evaluationData);
-
-        Map<String,Object> practicalEvaluation = new HashMap<>();
-        //TODO forcing practical evaluation
-        practicalEvaluation.put("PracticalComponent", evaluation);
+        Map<String,Object> fullEvaluation = new HashMap<>();
+        Log.d(TAG, "COmponent before saved:" + component);
+        fullEvaluation.put(component, evaluation);
 
 
         //TODO Forcing continuous Evaluation
         //TODO Change to use ObjectEvaluation
-        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath + "/Evaluations/Continuous Evaluation")
-                .set(practicalEvaluation, SetOptions.merge()).addOnSuccessListener(aVoid -> {
+        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath + "/Evaluations/" + season)
+                .set(fullEvaluation, SetOptions.merge()).addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Yupi", Toast.LENGTH_SHORT).show();
-
                 }).addOnFailureListener(e -> {
                     Toast.makeText(this, "Fail", Toast.LENGTH_SHORT).show();
                 });
 
+        Map<String, String> nameMap = new HashMap<>();
+        nameMap.put("name", seasonName);
+        AllMightyCreator.getDb().document("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + subPath + "/Evaluations/" + season)
+                .set(nameMap, SetOptions.merge());
+
     }
+
+
+    private void componentSpinner() {
+
+        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(this, R.array.component_array, R.layout.spinner_item);
+        componentSpinner.setAdapter(spinnerArrayAdapter);
+
+        possibleComponents = new HashMap<>();
+        possibleComponents.put("Prática", "practicalComponent");
+        possibleComponents.put("Teórica", "theoreticalComponent");
+        possibleComponents.put("Teórica-Prática", "theoreticalPracticalComponent");
+
+
+        component= possibleComponents.get("Prática");
+
+        componentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long arg3) {
+                String choosenComponent = parent.getItemAtPosition(position).toString();
+                Log.d(TAG, "choosen:" + choosenComponent);
+                for (Map.Entry entry: possibleComponents.entrySet()) {
+                    if (entry.getKey().equals(choosenComponent)) {
+                        Log.d(TAG, "Component:" + component);
+                        component = entry.getValue().toString();
+                    }
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
+
+    private void seasonSpinner() {
+
+        ArrayAdapter<CharSequence> spinnerArrayAdapter = ArrayAdapter.createFromResource(this, R.array.season_array, R.layout.spinner_item);
+        seasonSpinner.setAdapter(spinnerArrayAdapter);
+
+        Map<String, String> possibleSeasons = new HashMap<>();
+        possibleSeasons.put("Discreta", "Discreet Evaluation");
+        possibleSeasons.put("Final", "Final Evaluation");
+        possibleSeasons.put("Recurso", "Alternative Evaluation");
+
+        season = possibleSeasons.get("Discreta");
+        seasonName = "Discreta";
+
+        seasonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long arg3) {
+                String choosenSeason = parent.getItemAtPosition(position).toString();
+                for (Map.Entry entry: possibleSeasons.entrySet()) {
+                    if (entry.getKey().equals(choosenSeason)) {
+                        season = entry.getValue().toString();
+                        seasonName = entry.getKey().toString();
+                    }
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
+
 
 
     public static String getSubPath() {

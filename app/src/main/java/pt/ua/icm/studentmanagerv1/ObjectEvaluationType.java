@@ -14,13 +14,18 @@ import java.util.Map;
 public class ObjectEvaluationType {
     private String name;
     private Map<String, Map<String, Object>> practicalComponent; //O object pode ser String ou Date
+    private Map<String, Map<String, Object>> theoreticalComponent;
+    private Map<String, Map<String, Object>> theoreticalPracticalComponent;
+
 
     public ObjectEvaluationType() {
     }
 
-    public ObjectEvaluationType(String name, Map<String, Map<String, Object>> practicalComponent) {
+    public ObjectEvaluationType(String name, Map<String, Map<String, Object>> practicalComponent, Map<String, Map<String, Object>> theoreticalComponent, Map<String, Map<String, Object>> theoreticalPracticalComponent) {
         this.name = name;
         this.practicalComponent = practicalComponent;
+        this.theoreticalComponent = theoreticalComponent;
+        this.theoreticalPracticalComponent = theoreticalPracticalComponent;
     }
 
     public String getName() {
@@ -31,6 +36,13 @@ public class ObjectEvaluationType {
         return practicalComponent;
     }
 
+    public Map<String, Map<String, Object>> getTheoreticalComponent() {
+        return theoreticalComponent;
+    }
+
+    public Map<String, Map<String, Object>> getTheoreticalPracticalComponent() {
+        return theoreticalPracticalComponent;
+    }
 
     public void setAllGradesToDefault() {
         for (Map.Entry<String, Map<String, Object>> singleEv : practicalComponent.entrySet()) {
@@ -51,6 +63,43 @@ public class ObjectEvaluationType {
             practicalComponent.get(singleEv.getKey()).put("Study Sessions", studySession);
 
         }
+        for (Map.Entry<String, Map<String, Object>> singleEv : theoreticalComponent.entrySet()) {
+            theoreticalComponent.get(singleEv.getKey()).put("Grade", 0);
+            theoreticalComponent.get(singleEv.getKey()).put("Time Studied", 0);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy kk:mm", Locale.getDefault());
+            Map<String, List<Date>> studySession;
+            studySession = new HashMap<>();
+            studySession.put("19/12/2018 19:22:00", new ArrayList<>());
+            try {
+                studySession.get("19/12/2018 19:22:00").add(formatter.parse("19/12/2018 19:22:00"));
+                studySession.get("19/12/2018 19:22:00").add(formatter.parse("19/12/2018 20:37:00"));
+
+            } catch (ParseException e) {
+                Log.d("DTag", "Failed to add Dates");
+            }
+            theoreticalComponent.get(singleEv.getKey()).put("Study Sessions", studySession);
+
+        }
+        for (Map.Entry<String, Map<String, Object>> singleEv : theoreticalPracticalComponent.entrySet()) {
+
+            theoreticalPracticalComponent.get(singleEv.getKey()).put("Grade", 0);
+            theoreticalPracticalComponent.get(singleEv.getKey()).put("Time Studied", 0);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy kk:mm", Locale.getDefault());
+            Map<String, List<Date>> studySession;
+            studySession = new HashMap<>();
+            studySession.put("19/12/2018 19:22:00", new ArrayList<>());
+            try {
+                studySession.get("19/12/2018 19:22:00").add(formatter.parse("19/12/2018 19:22:00"));
+                studySession.get("19/12/2018 19:22:00").add(formatter.parse("19/12/2018 20:37:00"));
+
+            } catch (ParseException e) {
+                Log.d("DTag", "Failed to add Dates");
+            }
+            theoreticalPracticalComponent.get(singleEv.getKey()).put("Study Sessions", studySession);
+
+        }
     }
 
     public void getSingleEvaluation(String evName){
@@ -59,10 +108,11 @@ public class ObjectEvaluationType {
 
     @Override
     public String toString() {
-        return "ObjectEvaluation{" +
+        return "ObjectEvaluationType{" +
                 "name='" + name + '\'' +
                 ", practicalComponent=" + practicalComponent +
+                ", theoreticalComponent=" + theoreticalComponent +
+                ", theoreticalPracticalComponent=" + theoreticalPracticalComponent +
                 '}';
     }
-
 }

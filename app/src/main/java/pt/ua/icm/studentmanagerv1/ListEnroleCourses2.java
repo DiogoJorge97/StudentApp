@@ -63,16 +63,14 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
     //TODO Dinamic Degree
     private void loadAvailableCourses() {
-        AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    ObjectCourse course = document.toObject(ObjectCourse.class);
-                    if (selectedItems.contains(course.getName())) {
-                        chooseAcademicInfo(course);
-                    }
-                    // show line, wait for end of user edit to proceed
+        AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                ObjectCourse course = document.toObject(ObjectCourse.class);
+                if (selectedItems.contains(course.getName())) {
+                    chooseAcademicInfo(course);
                 }
+                // show line, wait for end of user edit to proceed
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -192,12 +190,14 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
 
             //TODO Continuous Evaluation forced
-            String cont = "Continuous Evaluation";
+            String cont = "Discreet Evaluation";
             Log.d(TAG, "/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " " + edition.split("#")[1] + "/Evaluations/");
             AllMightyCreator.getDb().collection("/Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses/" + id + "/Editions/" + edition.split("#")[0] + " " + edition.split("#")[1] + "/Evaluations/")
                     .get().addOnSuccessListener(queryDocumentSnapshots -> {
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     if (documentSnapshot.getId().equals(cont)) {
+                        Log.d(TAG, "WORKING");
+                        Log.d(TAG, "Snapshot: " + documentSnapshot.getData().toString());
                         ObjectEvaluationType objectEvaluation = documentSnapshot.toObject(ObjectEvaluationType.class);
                         saveStudentEdition(objectEvaluation, cont, edition, id);
                     }
@@ -219,10 +219,8 @@ public class ListEnroleCourses2 extends AppCompatActivity {
     }
 
     private void saveStudentEdition(ObjectEvaluationType objectEvaluation, String evaluationType, String edition, String id) {
+        Log.d(TAG, "Object: " + objectEvaluation.toString());
         objectEvaluation.setAllGradesToDefault();
-
-
-
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id + "/Evaluations/" + evaluationType)
                 .set(objectEvaluation)
                 .addOnSuccessListener(aVoid -> {

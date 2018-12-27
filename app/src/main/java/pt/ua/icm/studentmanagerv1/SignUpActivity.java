@@ -92,7 +92,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void spinner() {
-        Spinner spinner = findViewById(R.id.degree_spinner);
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, CoursesToPrint);
         spinner.setAdapter(spinnerArrayAdapter);
