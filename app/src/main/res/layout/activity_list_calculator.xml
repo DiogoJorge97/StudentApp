@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/list_all_evaluations"
+        android:id="@+id/list_all_calculator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -42,28 +42,29 @@
         android:text="Nota Final"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_all_evaluations" />
+        app:layout_constraintTop_toBottomOf="@+id/list_all_calculator" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/main_grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="92dp"
         android:ems="10"
         android:inputType="number"
-        android:lineSpacingExtra="-8sp"
+        android:lineSpacingExtra="-16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView30"
         app:layout_constraintStart_toEndOf="@+id/textView30" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/main_lock"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/main_grade"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="@+id/editText"
+        app:layout_constraintStart_toEndOf="@+id/main_grade"
+        app:layout_constraintTop_toTopOf="@+id/main_grade"
         app:srcCompat="@drawable/ic_lock" />
+
 </android.support.constraint.ConstraintLayout>

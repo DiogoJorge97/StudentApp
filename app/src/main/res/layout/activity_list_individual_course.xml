@@ -80,7 +80,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
             <LinearLayout
-                android:id="@+id/list_all_evaluations"
+                android:id="@+id/list_all_evaluation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,9 +17,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,6 +34,8 @@ public class ListIndividualCourse extends AppCompatActivity {
     private String directorEmail;
     private String directorName;
     private String componentTypeAbr;
+    private Map<String, List<String>> calculatorEvaluations;
+    public static String EXTRA_EVALUATIONS = "EXTRA_EVALUATIONS";
 
 
     TextView directorEmailTV;
@@ -52,16 +56,32 @@ public class ListIndividualCourse extends AppCompatActivity {
         directorInfo = findViewById(R.id.director_image);
         directorInfo.setOnClickListener(view -> getDirectorInfo());
 
+       calculatorEvaluations = new HashMap<>();
+
+
         getEvaluationInfo();
+        getDirectorInfo();
     }
 
-    public void getDirectorInfo() {
+    public void displaDirectorInfo(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ListIndividualCourse.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_director_data, null);
 
 
         directorEmailTV = mView.findViewById(R.id.director_email);
         directorNameTV = mView.findViewById(R.id.director_name);
+
+        directorEmailTV.setText(directorEmail);
+        directorNameTV.setText(directorName);
+
+
+        mBuilder.setView(mView);
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
+
+    }
+
+    public void getDirectorInfo() {
 
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + editionSubPath).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -71,10 +91,8 @@ public class ListIndividualCourse extends AppCompatActivity {
                         String value = entry.getValue().toString();
                         if (key.equals("E-mail")) {
                             directorEmail = value;
-                            directorEmailTV.setText(directorEmail);
                         } else if (key.equals("Name")) {
                             directorName = value;
-                            directorNameTV.setText(directorName);
                         }
 
                     }
@@ -82,9 +100,6 @@ public class ListIndividualCourse extends AppCompatActivity {
 
         });
 
-        mBuilder.setView(mView);
-        AlertDialog dialog = mBuilder.create();
-        dialog.show();
 
     }
 
@@ -101,7 +116,7 @@ public class ListIndividualCourse extends AppCompatActivity {
     }
 
     private void getEvaluationList(ObjectEvaluationType objectEvaluation) {
-        LinearLayout parent = findViewById(R.id.list_all_evaluations);
+        LinearLayout parent = findViewById(R.id.list_all_evaluation);
         Boolean flag = false;
 
 
@@ -114,6 +129,7 @@ public class ListIndividualCourse extends AppCompatActivity {
         componentType.put("theoreticalComponent", theoreticalComponent);
         componentType.put("theoreticalPracticalComponent", theoreticalPracticalComponent);
         Log.d(TAG, "All maps: " + componentType.toString());
+
 
         for (Map.Entry<String, Map<String, Map<String, Object>>> evaluationGroup : componentType.entrySet()) {
             String evaluationGroupName = evaluationGroup.getKey();
@@ -168,6 +184,9 @@ public class ListIndividualCourse extends AppCompatActivity {
                 }
 
 
+
+
+
                 LayoutInflater factory = LayoutInflater.from(this);
                 View view = factory.inflate(R.layout.list_individual_evaluations, null);
 
@@ -187,14 +206,24 @@ public class ListIndividualCourse extends AppCompatActivity {
 
                 evName.setText(name);
                 evDate.setText(date);
+
+                List<String> subCalculator = new ArrayList<>();
+                subCalculator.add(percentage +"%");
+
                 if (grade.equals("0")) {
                     evGrade.setVisibility(View.GONE);
+                    subCalculator.add("0");
+
                 } else {
                     evGrade.setText(grade);
+                    subCalculator.add(grade);
+
                 }
                 evTimeStudied.setText(timeStudied + "h");
                 evPercentage.setText(percentage + "%");
                 evCompTypeAbr.setText(componentTypeAbr);
+
+                calculatorEvaluations.put(name, subCalculator);
 
 
                 String finalName = name;
@@ -251,9 +280,6 @@ public class ListIndividualCourse extends AppCompatActivity {
                 });
 
                 parent.addView(view);
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(ListIndividualCourse.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_director_data, null);
-
 
             }
         }
@@ -279,7 +305,9 @@ public class ListIndividualCourse extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.calculator:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(ListIndividualCourse.this, ListCalculator.class));
+                Intent intent = new Intent(ListIndividualCourse.this, ListCalculator.class);
+                intent.putExtra(EXTRA_EVALUATIONS, (Serializable) calculatorEvaluations);
+                startActivity(intent);
                 finish();
 
         }
