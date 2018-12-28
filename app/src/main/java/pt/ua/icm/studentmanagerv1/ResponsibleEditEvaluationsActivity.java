@@ -240,7 +240,9 @@ public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
                         abbreviation += ch;
                     }
                 }
-                evaluationData.put("Component",abbreviation);
+                evaluationData.put("CpAbbreviation",abbreviation);
+                evaluationData.put("Component",entry.getKey().toString());
+
             }
         }
 

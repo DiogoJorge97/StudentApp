@@ -41,7 +41,8 @@
             android:label="@string/title_activity_responsible_edit_evaluations"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ListIndividualCourse" />
-        <activity android:name=".CalendarTest"></activity>
+        <activity android:name=".CalendarTest" />
+        <activity android:name=".ListCalculator"></activity>
     </application>
 
 </manifest>
