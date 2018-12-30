@@ -54,14 +54,18 @@ public class ListIndividualCourse extends AppCompatActivity {
         Toast.makeText(this, editionSubPath, Toast.LENGTH_SHORT).show();
 
         directorInfo = findViewById(R.id.director_image);
-        directorInfo.setOnClickListener(view -> getDirectorInfo());
 
        calculatorEvaluations = new HashMap<>();
 
 
         getEvaluationInfo();
         getDirectorInfo();
+
+        directorInfo.setOnClickListener(view -> displaDirectorInfo());
+
     }
+
+
 
     public void displaDirectorInfo(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(ListIndividualCourse.this);

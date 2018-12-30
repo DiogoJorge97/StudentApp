@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,12 @@ public class ListCalculator extends AppCompatActivity {
         Log.d(TAG, "Map: " + calculatorEvaluations.toString());
         showEvaluations(calculatorEvaluations);
 
-        ImageView main_lock = findViewById(R.id.main_lock);
+//        ImageView main_lock = findViewById(R.id.main_lock);
         EditText main_grade = findViewById(R.id.main_grade);
 
         main_grade.setEnabled(false);
 
-        main_lock.setOnClickListener(view1 -> {
+/*        main_lock.setOnClickListener(view1 -> {
             Log.d(TAG, main_grade.getKeyListener().toString());
             if (main_grade.isEnabled()){
                 main_grade.setEnabled(false);
@@ -48,7 +49,7 @@ public class ListCalculator extends AppCompatActivity {
             }
 
 
-        });
+        });*/
 
 
 
@@ -56,11 +57,13 @@ public class ListCalculator extends AppCompatActivity {
 
     private void showEvaluations(Map<String,List<String>> calculatorEvaluations) {
         LinearLayout parent = findViewById(R.id.list_all_calculator);
+        EditText main_grade = findViewById(R.id.main_grade);
 
         String name = "";
         String percentage = "";
         String grade = "";
 
+        List<EditText> editTextList = new ArrayList<>();
 
         for (Map.Entry entry: calculatorEvaluations.entrySet()){
 
@@ -70,6 +73,7 @@ public class ListCalculator extends AppCompatActivity {
             TextView nameTV = view.findViewById(R.id.calc_name);
             TextView percentageTV = view.findViewById(R.id.calc_percentage);
             EditText gradeEV = view.findViewById(R.id.calc_grade);
+            editTextList.add(gradeEV);
             ImageView unLockIV = view.findViewById(R.id.calc_un_lock);
 
 
@@ -83,11 +87,15 @@ public class ListCalculator extends AppCompatActivity {
             percentageTV.setText(percentage);
             if (!grade.equals("0")){
                 gradeEV.setText(grade);
+                gradeEV.setEnabled(false);
+                unLockIV.setImageResource(R.drawable.ic_lock);
             }
-            KeyListener keyListener = gradeEV.getKeyListener();
-            gradeEV.setEnabled(false);
 
             unLockIV.setOnClickListener(view1 -> {
+                int isEnabled = 0;
+
+
+
                 Log.d(TAG, gradeEV.getKeyListener().toString());
                 if (gradeEV.isEnabled()){
                     gradeEV.setEnabled(false);
@@ -98,11 +106,28 @@ public class ListCalculator extends AppCompatActivity {
 
                 }
 
+                for (EditText editText: editTextList){
+                    if (editText.isEnabled()){
+                        isEnabled++;
+                    }
+                }
+                Log.d(TAG, "Is: Enable " + isEnabled);
+                if (isEnabled!=1){
+                    main_grade.setEnabled(false);
+                } else {
+                    main_grade.setEnabled(true);
+                }
+
 
             });
             parent.addView(view);
 
         }
+
+        main_grade.setEnabled(false);
+
+
+
 
 
 

@@ -36,7 +36,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Nota"
         android:inputType="textPersonName"
         android:lineSpacingExtra="-16sp"
         app:layout_constraintStart_toEndOf="@+id/calc_percentage"
@@ -52,5 +51,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/calc_grade"
         app:layout_constraintTop_toTopOf="@+id/calc_grade"
-        app:srcCompat="@drawable/ic_lock" />
+        app:srcCompat="@drawable/ic_unlock" />
 </android.support.constraint.ConstraintLayout>
