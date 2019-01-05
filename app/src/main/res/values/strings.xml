@@ -37,6 +37,7 @@
     <string name="proximo">Proximo</string>
     <string name="title_activity_responsible_edit_evaluations">ResponsibleEditEvaluationsActivity
     </string>
+    <string name="empty" />
 
     <string-array name="season_array">
         <item>Discreta</item>
