@@ -1,7 +1,10 @@
 package pt.ua.icm.studentmanagerv1;
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.sql.Timestamp;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -112,8 +117,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new ListCoursesFragment();
                 break;
             case R.id.navigation_calendar:
-                fragment = new CalendarFragment();
-                break;
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                long startMillis = timestamp.getTime();
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, startMillis);
+                Intent intent = new Intent(Intent.ACTION_VIEW)
+                        .setData(builder.build());
+                startActivity(intent);
+                return true;
             case R.id.navigation_study:
                 fragment = new StudyFragment();
                 break;
