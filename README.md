@@ -14,7 +14,7 @@ As principais funcionalidades são:
 (inserir imagens)
 
 ## Arquitetura
-![alt_text] (link)
+![alt_text] (https://github.com/DiogoJorge97/StudentApp/blob/master/architecture.png)
 
 ## Limitações
 
