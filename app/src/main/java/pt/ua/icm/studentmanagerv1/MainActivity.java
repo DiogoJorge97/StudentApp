@@ -117,15 +117,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new ListCoursesFragment();
                 break;
             case R.id.navigation_calendar:
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                long startMillis = timestamp.getTime();
-                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-                builder.appendPath("time");
-                ContentUris.appendId(builder, startMillis);
-                Intent intent = new Intent(Intent.ACTION_VIEW)
-                        .setData(builder.build());
-                startActivity(intent);
-                return true;
+                fragment = new CalendarFragment();
+                break;
             case R.id.navigation_study:
                 fragment = new StudyFragment();
                 break;
