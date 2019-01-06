@@ -1,6 +1,8 @@
 package list;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +46,12 @@ public class ListIndividualCourse extends AppCompatActivity {
     TextView directorEmailTV;
     TextView directorNameTV;
     ImageView directorInfo;
+    ImageView messageAlert;
+
+    TextView person;
+    EditText namePerson;
+    TextView situation;
+    EditText textSituation;
 
 
     @Override
@@ -60,14 +68,46 @@ public class ListIndividualCourse extends AppCompatActivity {
 
        calculatorEvaluations = new HashMap<>();
 
+       messageAlert = findViewById(R.id.imageView);
 
         getEvaluationInfo();
         getDirectorInfo();
 
         directorInfo.setOnClickListener(view -> displaDirectorInfo());
 
+        messageAlert.setOnClickListener(view -> displayCampMessage());
     }
 
+    private void displayCampMessage() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(ListIndividualCourse.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_message_alert, null);
+
+        EditText textAssunto = mView.findViewById(R.id.textAssunto);
+        EditText textSituation = mView.findViewById(R.id.textSituation);
+
+        mBuilder.setView(mView)
+                .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String [] addresses = {"catarinaxavier@ua.pt"};
+                        String subject = "Tentativa";
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("message/rfc822");
+                        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, textAssunto.getText().toString());
+                        intent.putExtra(Intent.EXTRA_TEXT, textSituation.getText().toString());
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.ic_launcher_foreground));
+                        try{
+
+                            startActivity(intent);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
+
+    }
 
 
     public void displaDirectorInfo(){
@@ -172,9 +212,6 @@ public class ListIndividualCourse extends AppCompatActivity {
                             componentTypeName = value.toString();
                     }
                 }
-
-
-
 
 
                 LayoutInflater factory = LayoutInflater.from(this);
