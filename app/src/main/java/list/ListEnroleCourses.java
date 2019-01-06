@@ -1,24 +1,24 @@
-package pt.ua.icm.studentmanagerv1;
+package list;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import objects.Course;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ListEnroleCourses extends AppCompatActivity {
 
@@ -58,7 +58,7 @@ public class ListEnroleCourses extends AppCompatActivity {
         AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() +"/Courses").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 Log.d(TAG,"Course: " + document.getData().toString());
-                ObjectCourse course = document.toObject(ObjectCourse.class);
+                Course course = document.toObject(Course.class);
                 coursesNames.add(course.getName());
             }
             setListView();

@@ -1,10 +1,10 @@
-package pt.ua.icm.studentmanagerv1;
+package objects;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ObjectCourse {
+public class Course {
 
     private String Abbreviation;
     private String ECTS;
@@ -13,10 +13,10 @@ public class ObjectCourse {
     private String Name;
     private String DocumentId;
 
-    public ObjectCourse() {
+    public Course() {
     }
 
-    public ObjectCourse(String abbreviation, String ects, Map<String, List<String>>  editions, String id, String name) {
+    public Course(String abbreviation, String ects, Map<String, List<String>>  editions, String id, String name) {
         this.Abbreviation = abbreviation;
         this.ECTS = ects;
         this.Editions = editions;
@@ -24,7 +24,7 @@ public class ObjectCourse {
         this.Name = name;
     }
 
-    public ObjectCourse(String abbreviation, String ECTS, Map<String, List<String>> editions, String ID, String name, String documentId) {
+    public Course(String abbreviation, String ECTS, Map<String, List<String>> editions, String ID, String name, String documentId) {
         Abbreviation = abbreviation;
         this.ECTS = ECTS;
         Editions = editions;

@@ -1,33 +1,47 @@
 package pt.ua.icm.studentmanagerv1;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.util.ArrayMap;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import objects.Degree;
+import objects.EvaluationGroup;
+import objects.Student;
+
 public class AllMightyCreator {
 
-    private static ObjectDegree userDegree;
-    private static ObjectStudent user;
+    private static Degree userDegree;
+    private static Student user;
     private static boolean hasCourses;
     private static String nmec;
     private static final String currentYear = "2018-2019";
-
+    private static Map<String, EvaluationGroup> allEvaluationsMap;
+    public static Map<String, Map<String, Object>> evaluationMap;
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private final String TAG = "DTag AllMightyCreator ";
 
 
-
-
     public AllMightyCreator(String nmec) {
-
+        allEvaluationsMap = new HashMap<>();
+        evaluationMap = new HashMap<>();
         this.nmec = nmec;
         createUserObjects();
 
@@ -36,24 +50,91 @@ public class AllMightyCreator {
     public void createUserObjects() {
         Log.d(TAG, "NMec creating student: " + getnMec());
         getDb().collection("Students").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if (document.getId().equals("St" + getnMec())){
-                                user = document.toObject(ObjectStudent.class);
-                                Log.d(TAG,user.toString());
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        if (document.getId().equals("St" + getnMec())) {
+                            user = document.toObject(Student.class);
+                            Log.d(TAG, user.toString());
 
-                                createUserDegreeObject();
-
-                                createUserCoursesObject();
-                            }
+                            createUserDegreeObject();
+                            hasCourses();
+                            getUserCourses();
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO To do
+                }).addOnFailureListener(e -> {
+            //TODO To do
+        });
+
+    }
+
+    private void getUserCourses() {
+        getDb().collection("Students/St" + getUser().getNmec() + "/Courses")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+
+                        createUserEvaluations(documentSnapshot.getId());
+                        Log.d(TAG, "Doc name: " + documentSnapshot.getId());
+                    }
+                }).addOnFailureListener(e -> {
+
+        });
+    }
+
+    private void createUserEvaluations(String subPath) {
+        getDb().collection("/Students/St" + getnMec() + "/Courses/" + subPath + "/Evaluations")
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                EvaluationGroup evaluationGroup = documentSnapshot.toObject(EvaluationGroup.class);
+                allEvaluationsMap.put(subPath, evaluationGroup);
+                Log.d(TAG, "Evaluation Group: " + evaluationGroup.toString());
+
+
+                Map<String, Map<String, Object>> practicalComponent = evaluationGroup.getPracticalComponent();
+                Map<String, Map<String, Object>> theoreticalComponent = evaluationGroup.getTheoreticalComponent();
+                Map<String, Map<String, Object>> theoreticalPracticalComponent = evaluationGroup.getTheoreticalPracticalComponent();
+                Map<String, Map<String, Map<String, Object>>> componentType = new TreeMap<>();
+                componentType.put("practicalComponent", practicalComponent);
+                componentType.put("theoreticalComponent", theoreticalComponent);
+                componentType.put("theoreticalPracticalComponent", theoreticalPracticalComponent);
+
+
+                for (Map.Entry<String, Map<String, Map<String, Object>>> evaluationGroupMap : componentType.entrySet()) {
+                    String evaluationGroupName = evaluationGroupMap.getKey();
+                    Log.d(TAG, "Pracctical: " + practicalComponent.values().toString());
+                    Log.d(TAG, evaluationGroupMap.getKey());
+                    for (Map.Entry<String, Map<String, Object>> evaluation : evaluationGroupMap.getValue().entrySet()) {
+
+
+                        String name = "";
+                        String date = "";
+                        String bigDate = "";
+                        String grade = "";
+                        String percentage = "";
+                        String timeStudied = "";
+                        String componentTypeName = "";
+                        String componentTypeAbr = "";
+
+
+                        Map<String, Object> evaluationDataObject;
+                        evaluationDataObject = evaluation.getValue();
+
+
+                        for (Map.Entry<String, Object> specification : evaluationDataObject.entrySet()) {
+                            String key = specification.getKey();
+                            Object value = specification.getValue();
+                            switch (key) {
+                                case "Name":
+                                    name = value.toString();
+                                    break;
+                            }
+                        }
+
+                        evaluationMap.put(subPath + "#" + name, evaluationDataObject);
+                    }
+
+
+                }
             }
         });
 
@@ -64,35 +145,27 @@ public class AllMightyCreator {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         if (user.getDegrees().contains(document.getId())) {
-                            userDegree = document.toObject(ObjectDegree.class);
+                            userDegree = document.toObject(Degree.class);
                             Log.d(TAG, userDegree.toString());
                         }
 
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //TODO To do
-            }
+                }).addOnFailureListener(e -> {
+            //TODO To do
         });
     }
 
-    private void createUserCoursesObject(){
-        getDb().collection("Students/St" + getUser().getNmec() + "/Courses").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        hasCourses=false;
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                            hasCourses=true;
-                            Log.d(TAG, "Has Courses = True");
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
 
-            }
+    private void hasCourses() {
+        getDb().collection("Students/St" + getUser().getNmec() + "/Courses").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    hasCourses = false;
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        hasCourses = true;
+                        Log.d(TAG, "Has Courses = True");
+                    }
+                }).addOnFailureListener(e -> {
+
         });
     }
 
@@ -117,12 +190,19 @@ public class AllMightyCreator {
         AllMightyCreator.hasCourses = hasCourses;
     }
 
-    public static ObjectStudent getUser() {
+    public static Student getUser() {
         return user;
     }
 
-    public static ObjectDegree getUserDegree() {
+    public static Degree getUserDegree() {
         return userDegree;
     }
 
+    public static Map<String, Map<String, Object>> getAllEvaluationsMap() {
+        return evaluationMap;
+    }
+
+    public static EvaluationGroup getSpecificEvaluation(String subpath) {
+        return allEvaluationsMap.get(subpath);
+    }
 }

@@ -1,4 +1,4 @@
-package pt.ua.icm.studentmanagerv1;
+package responsible;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -20,6 +20,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ResponsibleEditActivity extends AppCompatActivity {
 

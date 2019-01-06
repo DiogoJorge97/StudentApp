@@ -1,4 +1,4 @@
-package pt.ua.icm.studentmanagerv1;
+package responsible;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ResponsibleEditEvaluationsActivity extends AppCompatActivity{
 

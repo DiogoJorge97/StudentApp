@@ -40,6 +40,8 @@
     <string name="empty" />
     <string name="lock_error_message">Desbloqueie dois cadeados para ser possivel calcular dados</string>
     <string name="lock_error_message2">Preencha todos os campos bloqueados</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="guardar">Guardar</string>
 
     <string-array name="season_array">
         <item>Discreta</item>

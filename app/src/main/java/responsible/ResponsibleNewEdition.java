@@ -1,4 +1,4 @@
-package pt.ua.icm.studentmanagerv1;
+package responsible;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ResponsibleNewEdition extends AppCompatActivity {
 

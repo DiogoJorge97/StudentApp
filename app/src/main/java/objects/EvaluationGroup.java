@@ -1,6 +1,12 @@
-package pt.ua.icm.studentmanagerv1;
+package objects;
 
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,18 +16,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
-public class ObjectEvaluationType {
+import list.ListIndividualCourse;
+import pt.ua.icm.studentmanagerv1.R;
+
+public class EvaluationGroup {
     private String name;
     private Map<String, Map<String, Object>> practicalComponent; //O object pode ser String ou Date
     private Map<String, Map<String, Object>> theoreticalComponent;
     private Map<String, Map<String, Object>> theoreticalPracticalComponent;
 
 
-    public ObjectEvaluationType() {
+    public EvaluationGroup() {
     }
 
-    public ObjectEvaluationType(String name, Map<String, Map<String, Object>> practicalComponent, Map<String, Map<String, Object>> theoreticalComponent, Map<String, Map<String, Object>> theoreticalPracticalComponent) {
+    public EvaluationGroup(String name, Map<String, Map<String, Object>> practicalComponent, Map<String, Map<String, Object>> theoreticalComponent, Map<String, Map<String, Object>> theoreticalPracticalComponent) {
         this.name = name;
         this.practicalComponent = practicalComponent;
         this.theoreticalComponent = theoreticalComponent;
@@ -43,6 +53,9 @@ public class ObjectEvaluationType {
     public Map<String, Map<String, Object>> getTheoreticalPracticalComponent() {
         return theoreticalPracticalComponent;
     }
+
+
+
 
     public void setAllGradesToDefault() {
         for (Map.Entry<String, Map<String, Object>> singleEv : practicalComponent.entrySet()) {
@@ -102,13 +115,13 @@ public class ObjectEvaluationType {
         }
     }
 
-    public void getSingleEvaluation(String evName){
+    public void getSingleEvaluation(String evName) {
 
     }
 
     @Override
     public String toString() {
-        return "ObjectEvaluationType{" +
+        return "EvaluationGroup{" +
                 "name='" + name + '\'' +
                 ", practicalComponent=" + practicalComponent +
                 ", theoreticalComponent=" + theoreticalComponent +

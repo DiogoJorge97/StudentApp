@@ -1,9 +1,9 @@
-package pt.ua.icm.studentmanagerv1;
+package objects;
 
 import java.util.List;
 import java.util.Map;
 
-public class ObjectDegree {
+public class Degree {
 
     private String Abbreviation;
     private String ID;
@@ -12,10 +12,10 @@ public class ObjectDegree {
     private Map<String, List<String>> ClassRepresentatives;
     private Map<String, List<String>> Directors;
 
-    public ObjectDegree() {
+    public Degree() {
     }
 
-    public ObjectDegree(String abbreviation, String ID, String name, String type, Map<String, List<String>> classRepresentatives, Map<String, List<String>> directors) {
+    public Degree(String abbreviation, String ID, String name, String type, Map<String, List<String>> classRepresentatives, Map<String, List<String>> directors) {
         Abbreviation = abbreviation;
         this.ID = ID;
         Name = name;
@@ -50,7 +50,7 @@ public class ObjectDegree {
 
     @Override
     public String toString() {
-        return "ObjectDegree{" +
+        return "Degree{" +
                 "Abbreviation='" + Abbreviation + '\'' +
                 ", ID='" + ID + '\'' +
                 ", Name='" + Name + '\'' +

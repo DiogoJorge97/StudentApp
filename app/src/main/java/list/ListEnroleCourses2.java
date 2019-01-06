@@ -1,11 +1,10 @@
-package pt.ua.icm.studentmanagerv1;
+package list;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,10 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -25,6 +22,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import objects.EvaluationGroup;
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.MainActivity;
+import objects.Course;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ListEnroleCourses2 extends AppCompatActivity {
 
@@ -66,7 +69,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
         AllMightyCreator.getDb().collection("Degrees/" + AllMightyCreator.getUserDegree().getID() + "/Courses").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                ObjectCourse course = document.toObject(ObjectCourse.class);
+                Course course = document.toObject(Course.class);
                 if (selectedItems.contains(course.getName())) {
                     chooseAcademicInfo(course);
                 }
@@ -80,7 +83,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
         });
     }
 
-    private void chooseAcademicInfo(final ObjectCourse course) {
+    private void chooseAcademicInfo(final Course course) {
         android.view.View v = getLayoutInflater().inflate(R.layout.enrole_courses_single, null);
         TextView textView = v.findViewById(R.id.textView14);
         Spinner spinner = v.findViewById(R.id.spinner1);
@@ -123,7 +126,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
 
     }
 
-    private void chooseSemester(final ObjectCourse course, final String year, Spinner spinner2, ArrayAdapter<String> spinnerArrayAdapter2, List<String> semesters) {
+    private void chooseSemester(final Course course, final String year, Spinner spinner2, ArrayAdapter<String> spinnerArrayAdapter2, List<String> semesters) {
         String[] tempArray = course.getEditions().get(year).toArray(new String[course.getEditions().get(year).size()]);
 
         for (String el : tempArray) {
@@ -162,7 +165,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            ObjectCourse courseTemp = document.toObject(ObjectCourse.class);
+                            Course courseTemp = document.toObject(Course.class);
                             saveStudentSubscription(id, edition, courseTemp);
 
                         }
@@ -198,7 +201,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                     if (documentSnapshot.getId().equals(cont)) {
                         Log.d(TAG, "WORKING");
                         Log.d(TAG, "Snapshot: " + documentSnapshot.getData().toString());
-                        ObjectEvaluationType objectEvaluation = documentSnapshot.toObject(ObjectEvaluationType.class);
+                        EvaluationGroup objectEvaluation = documentSnapshot.toObject(EvaluationGroup.class);
                         saveStudentEdition(objectEvaluation, cont, edition, id);
                     }
                 }
@@ -218,7 +221,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id).set(directorData, SetOptions.merge());
     }
 
-    private void saveStudentEdition(ObjectEvaluationType objectEvaluation, String evaluationType, String edition, String id) {
+    private void saveStudentEdition(EvaluationGroup objectEvaluation, String evaluationType, String edition, String id) {
         Log.d(TAG, "Object: " + objectEvaluation.toString());
         objectEvaluation.setAllGradesToDefault();
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id + "/Evaluations/" + evaluationType)
@@ -233,7 +236,7 @@ public class ListEnroleCourses2 extends AppCompatActivity {
                 });
     }
 
-    private void saveStudentSubscription(String id, String edition, ObjectCourse course) {
+    private void saveStudentSubscription(String id, String edition, Course course) {
         course.setEmptyEditions();
         course.setDocumentId(edition + "#" + id);
         AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "#" + id).set(course, SetOptions.merge())

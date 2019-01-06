@@ -1,4 +1,4 @@
-package pt.ua.icm.studentmanagerv1;
+package list;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import objects.EvaluationGroup;
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.R;
+
 public class ListIndividualCourse extends AppCompatActivity {
 
     private static final String TAG = "DTag ListIndividualCrs";
@@ -33,7 +37,6 @@ public class ListIndividualCourse extends AppCompatActivity {
     String editionSubPath;
     private String directorEmail;
     private String directorName;
-    private String componentTypeAbr;
     private Map<String, List<String>> calculatorEvaluations;
     public static String EXTRA_EVALUATIONS = "EXTRA_EVALUATIONS";
 
@@ -108,18 +111,10 @@ public class ListIndividualCourse extends AppCompatActivity {
     }
 
     private void getEvaluationInfo() {
-        //TODO forcing Continuous Evaluation
-        AllMightyCreator.getDb().document("/Students/St" + AllMightyCreator.getnMec() + "/Courses/" + editionSubPath + "/Evaluations/Discreet Evaluation")
-                .get().addOnSuccessListener(documentSnapshot -> {
-            Log.d(TAG, documentSnapshot.getData().toString());
-            ObjectEvaluationType objectEvaluation = documentSnapshot.toObject(ObjectEvaluationType.class);
-            getEvaluationList(objectEvaluation);
-        });
-
-
+        getEvaluationList(AllMightyCreator.getSpecificEvaluation(editionSubPath));
     }
 
-    private void getEvaluationList(ObjectEvaluationType objectEvaluation) {
+    private void getEvaluationList(EvaluationGroup objectEvaluation) {
         LinearLayout parent = findViewById(R.id.list_all_evaluation);
         Boolean flag = false;
 
@@ -140,16 +135,7 @@ public class ListIndividualCourse extends AppCompatActivity {
             for (Map.Entry<String, Map<String, Object>> evaluation : evaluationGroup.getValue().entrySet()) {
 
 
-                String name = "";
-                String date = "";
-                String bigDate = "";
-                String grade = "";
-                String percentage = "";
-                String timeStudied = "";
-                String componentTypeName = "";
-
-                Log.d(TAG, "->KEY: " + evaluation.getKey());
-                Log.d(TAG, "->VALUE: " + evaluation.getValue());
+                String name = ""; String date = ""; String bigDate = ""; String grade = ""; String percentage = ""; String timeStudied = ""; String componentTypeName = ""; String componentTypeAbr = "";
 
 
                 Log.d(TAG, "KEY: " + evaluation.getKey());
@@ -258,7 +244,7 @@ public class ListIndividualCourse extends AppCompatActivity {
                     percentageSubTV.setText(finalPercentage + "%");
                     dateSubTV.setText(finalBigDate);
 
-                    mBuilder.setPositiveButton("Guardar", (dialog, id) -> {
+                    mBuilder.setPositiveButton(R.string.guardar, (dialog, id) -> {
                         if (gradeSubEV.getText().toString().equals("0") || gradeSubEV.getText().toString().equals("")) {
                             evGrade.setVisibility(View.GONE);
                             saveGrade("0", finalName, evaluationGroupName);
@@ -273,7 +259,7 @@ public class ListIndividualCourse extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Nota tem que estar entre 0 e 20\nNão guardado", Toast.LENGTH_SHORT).show();
                         }
 
-                    }).setNegativeButton("Cancelar", (dialog, id) -> {
+                    }).setNegativeButton(R.string.cancelar, (dialog, id) -> {
                         // User cancelled the dialog
                     });
 

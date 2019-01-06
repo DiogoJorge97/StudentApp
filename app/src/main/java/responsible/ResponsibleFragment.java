@@ -1,4 +1,4 @@
-package pt.ua.icm.studentmanagerv1;
+package responsible;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ResponsibleFragment extends android.support.v4.app.Fragment {
 

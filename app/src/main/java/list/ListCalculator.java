@@ -1,10 +1,8 @@
-package pt.ua.icm.studentmanagerv1;
+package list;
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ListCalculator extends AppCompatActivity {
 

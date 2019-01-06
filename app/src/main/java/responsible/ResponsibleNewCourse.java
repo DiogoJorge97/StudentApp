@@ -1,33 +1,23 @@
-package pt.ua.icm.studentmanagerv1;
+package responsible;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import pt.ua.icm.studentmanagerv1.AllMightyCreator;
+import pt.ua.icm.studentmanagerv1.MainActivity;
+import objects.Student;
+import pt.ua.icm.studentmanagerv1.R;
 
 public class ResponsibleNewCourse extends AppCompatActivity {
 
@@ -49,7 +39,7 @@ public class ResponsibleNewCourse extends AppCompatActivity {
     public static final int TEXT_REQUEST = 1;
     private final String TAG = "DTag RespNCourse";
 
-    private static ObjectStudent user;
+    private static Student user;
 
 
     @Override

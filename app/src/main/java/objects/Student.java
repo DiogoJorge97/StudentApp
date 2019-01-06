@@ -1,8 +1,8 @@
-package pt.ua.icm.studentmanagerv1;
+package objects;
 
 import java.util.List;
 
-public class ObjectStudent {
+public class Student {
 
     private String Gmail;
     private String UaEmail;
@@ -10,10 +10,10 @@ public class ObjectStudent {
     private String Name;
     private List<String> Degrees;
 
-    public ObjectStudent() {
+    public Student() {
     }
 
-    public ObjectStudent(String gmail, String uaEmail, String nmec, String name, List<String> degrees) {
+    public Student(String gmail, String uaEmail, String nmec, String name, List<String> degrees) {
         this.Gmail = gmail;
         this.UaEmail = uaEmail;
         this.Nmec = nmec;
@@ -44,7 +44,7 @@ public class ObjectStudent {
 
     @Override
     public String toString() {
-        return "ObjectStudent{" +
+        return "Student{" +
                 "Gmail='" + Gmail + '\'' +
                 ", UaEmail='" + UaEmail + '\'' +
                 ", Nmec='" + Nmec + '\'' +
