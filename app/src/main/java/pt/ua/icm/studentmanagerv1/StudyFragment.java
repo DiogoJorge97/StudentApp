@@ -24,13 +24,20 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import list.ListEnroleCourses;
 import list.ListIndividualCourse;
@@ -72,7 +79,7 @@ public class StudyFragment extends android.support.v4.app.Fragment {
         for (Map.Entry entry : evaluationList.entrySet()) {
             String name = entry.getKey().toString();
             String ucId = name.split("#")[2];
-            String eName = name.split("#")[3];
+            String eName = name.split("#")[4];
 
             String timeStudied = "";
             Map<String, Object> eval = (Map<String, Object>) entry.getValue();
@@ -96,13 +103,13 @@ public class StudyFragment extends android.support.v4.app.Fragment {
             uc.setText(courseIDAbr.get(ucId));
             eNameTV.setText(eName);
 
-            studyButton.setOnClickListener(view2 -> studyDialog());
+            studyButton.setOnClickListener(view2 -> studyDialog(name));
 
             linearLayout.addView(view1);
         }
     }
 
-    private void studyDialog() {
+    private void studyDialog(String subpath) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         View mView = getLayoutInflater().inflate(R.layout.dialog_study_session, null);
 
@@ -133,6 +140,62 @@ public class StudyFragment extends android.support.v4.app.Fragment {
 
 
         mBuilder.setPositiveButton(R.string.guardar, (dialog, id) -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy kk:mm", Locale.getDefault());
+            final int[] timeStudied = {0};
+
+
+            String[] subPathArray= subpath.split("#");
+            String edition = subPathArray[0] + "#" + subPathArray[1] + "#" + subPathArray[2];
+
+            AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "/Evaluations/Discreet Evaluation")
+                    .get().addOnSuccessListener(documentSnapshot -> {
+                Map<String, Object> s  = documentSnapshot.getData();
+                Map<String, Map<String, Object>> s1 = (Map<String, Map<String, Object>>) s.get(subPathArray[3]);
+                Log.d("DTag","Time Studied: " + s1.get(subPathArray[4]).get("Time Studied"));
+
+                //timeStudied[0] = Integer.parseInt((String) s1.get(subPathArray[4]).get("Time Studied"));
+
+
+            });
+
+            Map<String, Map<String, Map<String, Object>>> componentType = new TreeMap<>();
+            Map<String, Map<String, Object>> evaluation = new HashMap<>();
+            Map<String, Object> evaluationData = new HashMap<>();
+            Map<String, ArrayList<Date>> studySession = new HashMap<>();
+            String date1 = day1.getText().toString() + " " + hour1.getText().toString();
+            String date2 = day2.getText().toString() + " " + hour2.getText().toString();
+            studySession.put(date1, new ArrayList<>());
+            try {
+                studySession.get(date1).add(formatter.parse(date1));
+                studySession.get(date1).add(formatter.parse(date2));
+                timeStudied[0] += getDateDiff(formatter.parse(date1),formatter.parse(date2),TimeUnit.MINUTES);
+
+            } catch (ParseException e) {
+                Log.d("DTag", "Failed to add Dates");
+            }
+            evaluationData.put("Study Sessions", studySession);
+            evaluation.put(subPathArray[4], evaluationData);
+            componentType.put(subPathArray[3], evaluation);
+
+            AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "/Evaluations/Discreet Evaluation")
+                    .set(componentType, SetOptions.merge());
+
+
+
+
+
+            Map<String, Map<String, Map<String, Object>>> componentType1 = new TreeMap<>();
+            Map<String, Map<String, Object>> evaluation1 = new HashMap<>();
+            Map<String, Object> evaluationData1 = new HashMap<>();
+            Log.d("DTag","Time Studied: " + timeStudied[0]);
+            evaluationData1.put("Time Studied", timeStudied[0]);
+            evaluation1.put(subPathArray[4], evaluationData);
+            componentType1.put(subPathArray[3], evaluation);
+            AllMightyCreator.getDb().document("Students/St" + AllMightyCreator.getnMec() + "/Courses/" + edition + "/Evaluations/Discreet Evaluation")
+                    .update(subPathArray[3] + "." + subPathArray[4] +".Time Studied", timeStudied[0]);
+
+
+
 
 
         }).setNegativeButton(R.string.cancelar, (dialog, id) -> {
@@ -206,6 +269,11 @@ public class StudyFragment extends android.support.v4.app.Fragment {
         }
     };
 
+
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
 
 
 }

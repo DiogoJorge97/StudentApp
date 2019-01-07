@@ -101,7 +101,6 @@ public class AllMightyCreator {
 
                 for (Map.Entry<String, Map<String, Map<String, Object>>> evaluationGroupMap : componentType.entrySet()) {
                     String evaluationGroupName = evaluationGroupMap.getKey();
-                    Log.d(TAG, "Pracctical: " + practicalComponent.values().toString());
                     Log.d(TAG, evaluationGroupMap.getKey());
                     for (Map.Entry<String, Map<String, Object>> evaluation : evaluationGroupMap.getValue().entrySet()) {
 
@@ -130,7 +129,7 @@ public class AllMightyCreator {
                             }
                         }
 
-                        evaluationMap.put(subPath + "#" + name, evaluationDataObject);
+                        evaluationMap.put(subPath + "#" + evaluationGroupName +  "#" + name, evaluationDataObject);
                     }
 
 
