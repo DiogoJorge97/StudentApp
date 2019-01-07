@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -34,12 +36,6 @@ import java.util.Map;
 
 public class CalendarFragment {
 
-    public static final String ACCOUNT_NAME = "Local Calendar";
-
-    public static final String ACCOUNT_TYPE = "ua.pt.myapplication.account";
-
-    private static final String INT_NAME_PREFIX = "local_";
-
     public void mainCalendar(Context context) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         long startMillis = timestamp.getTime();
@@ -51,28 +47,19 @@ public class CalendarFragment {
                 .setData(builder.build());
         context.startActivity(intent);
 
-        String today = "07/01/2019";
+        AllMightyCreator.getDb().collection("Students/St" + AllMightyCreator.getnMec() + "/Courses")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        getEvents(documentSnapshot.getId(), context);
+                    }
+                }).addOnFailureListener(e -> {
 
-        String tomorrow = "08/01/2019";
+        });
+    }
 
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date date = null;
-        try {
-            date = formatter.parse(today);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Date date1 = null;
-        try {
-            date1 = formatter.parse(tomorrow);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
-        AllMightyCreator.getDb().document("/Students/St" + AllMightyCreator.getnMec() + "/Courses/2018-2019#Primeiro#45424/Evaluations/Discreet Evaluation").get()
+    public void getEvents(String courseEdition, Context context){
+        AllMightyCreator.getDb().document("/Students/St" + AllMightyCreator.getnMec() + "/Courses/" + courseEdition + "/Evaluations/Discreet Evaluation").get()
                 .addOnSuccessListener(documentSnapshot -> {
 
                     Map<String, Object> data = documentSnapshot.getData();
@@ -123,8 +110,6 @@ public class CalendarFragment {
                     }
                 }).addOnFailureListener(e -> {
         });
-
-
     }
 
 
