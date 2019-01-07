@@ -3,6 +3,7 @@ package list;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class ListIndividualCourse extends AppCompatActivity {
 
     private static final String TAG = "DTag ListIndividualCrs";
 
+    String nameCourse;
     String editionSubPath;
     private String directorEmail;
     private String directorName;
@@ -57,11 +59,16 @@ public class ListIndividualCourse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_list_individual_course);
 
         Intent intent = getIntent();
 
+        ActionBar actionBar = getSupportActionBar();
         editionSubPath = intent.getStringExtra(ListCoursesFragment.EXTRA_COURSE_SELECTION);
+        nameCourse = intent.getStringExtra(ListCoursesFragment.EXTRA_COURSE_NAME);
+        actionBar.setTitle(nameCourse);
+        actionBar.show();
         Toast.makeText(this, editionSubPath, Toast.LENGTH_SHORT).show();
 
         directorInfo = findViewById(R.id.director_image);
@@ -89,7 +96,6 @@ public class ListIndividualCourse extends AppCompatActivity {
                 .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String [] addresses = {"catarinaxavier@ua.pt"};
-                        String subject = "Tentativa";
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("message/rfc822");
                         intent.putExtra(Intent.EXTRA_EMAIL, addresses);
