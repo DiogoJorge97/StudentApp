@@ -31,7 +31,3 @@ Duas das funcionalidades que consideramos implementar não foram possíveis de s
 
 Convém ter a internet ligada dado a busca de dados e da autenticação feita pelo Firebase.
 Tem um Target Mínimo de 22 e foi testado até ao 27.
-
-### Login e Pass para testes:
-* login: antonio@ua.pt
-* pass: antonio
