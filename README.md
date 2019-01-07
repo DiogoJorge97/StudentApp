@@ -24,7 +24,10 @@ As principais funcionalidades são:
 
 ## Limitações
 
-(preencher)
+Duas das funcionalidades que consideramos implementar não foram possíveis de serem implementadas, passando então a enumerá-las:
+- Capacidade de o aluno poder examinar o seu estudo ao longo dos períodos desejados.
+- Capacidade de o aluno ver o seu horário escolar 
+
 
 
 ## Cuidados particulares
