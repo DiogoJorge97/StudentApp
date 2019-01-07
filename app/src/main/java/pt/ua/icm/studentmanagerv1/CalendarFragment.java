@@ -80,30 +80,37 @@ public class CalendarFragment {
                                 long endTime = d1.getTime();
                                 String title = String.valueOf(((HashMap) key1).get("Name"));
                                 insertEvent(1, beginTime, endTime, title, context);
-                                for (Object x : ok.keySet()) {
+                                /*for (Object x : ok.keySet()) {
                                     if (x.toString().equals("Study Sessions")) {
                                         HashMap dates = (HashMap) ok.get(x);
+                                        int cont = 0;
                                         for (Object y : dates.values()) {
-                                            int cont = 0;
-                                            for (Object z : (ArrayList) y) {
-                                                StringBuilder title1 = new StringBuilder(title + " - StudySessions ");
-                                                Date d2 = null;
-                                                try {
-                                                    d2 = sdf3.parse(String.valueOf(z));
+                                            StringBuilder title1 = new StringBuilder(title + " - StudySessions ");
+                                            ArrayList z = (ArrayList) y;
+                                            Date d2 = null;
+                                            try {
+                                                d2 = sdf3.parse(String.valueOf(z.get(0)));
 
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                                long beginTimeSession = d2.getTime();
-                                                long endTimeSession = d2.getTime();
-                                                title1.append(cont);
-                                                insertEvent(1, beginTimeSession, endTimeSession, title1.toString(), context);
-                                                cont += 1;
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
+
+                                            Date d3 = null;
+                                            try {
+                                                d3 = sdf3.parse(String.valueOf(z.get(1)));
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            long beginTimeSession = d2.getTime();
+                                            long endTimeSession = d3.getTime();
+                                            title1.append(cont);
+                                            insertEvent(1, beginTimeSession, endTimeSession, title1.toString(), context);
+                                            cont += 1;
 
                                         }
                                     }
-                                }
+                                }**/
                             }
                         }
 
