@@ -11,13 +11,10 @@ As principais funcionalidades são:
 - LogIn e SignUp. No primeiro login do utilizador/estudante terá de associar disciplinas à sua conta.
 - No campo de estudo o estudante pode selecionar o tempo de estudo, correr um conómetro a ver quanto tempo de estudo útil terá ou ainda observar estatísticas de estudos a todas as cadeiras atuais.
 - O representante de curso tem um campo só seu onde terão que adicionar momentos de avaliação a cada cadeira.
-- Capacidade de o aluno ter sincronizado o calendário do google de forma a poder ter os eventos guardados no mesmo. 
+- Capacidade de o aluno ter sincronizado o calendário local de forma a poder ter os eventos guardados no mesmo. 
 - Capacidade de o aluno poder reportar alguns dado inconsistente à comissão responsável.
 - Capacidade de o aluno poder marcar as suas horas de estudo para cada UC das mais variadas maneiras, como inserção de dados manuais, através de cronômetro ou temporizador.
 - Capacidade de o aluno alterar notas relativamente a momentos de avaliação.
-- Capacidade de o aluno ver a sua média geral.
-
-(inserir imagens)
 
 ## Arquitetura
 ![alt_text](https://github.com/DiogoJorge97/StudentApp/blob/master/architecture.png)
