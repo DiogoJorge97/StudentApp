@@ -43,7 +43,7 @@
             android:label="@string/title_activity_responsible_edit_evaluations"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="list.ListIndividualCourse" />
-        <activity android:name="list.ListCalculator"></activity>
+        <activity android:name="list.ListCalculator"/>
     </application>
 
 </manifest>

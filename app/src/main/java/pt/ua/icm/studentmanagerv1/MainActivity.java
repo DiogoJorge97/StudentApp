@@ -116,8 +116,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new ListCoursesFragment();
                 break;
             case R.id.navigation_calendar:
-                fragment = new CalendarFragment();
-                break;
+                CalendarFragment calendarFragment = new CalendarFragment();
+                calendarFragment.mainCalendar(this);
+                return true;
             case R.id.navigation_study:
                 fragment = new StudyFragment();
                 break;
