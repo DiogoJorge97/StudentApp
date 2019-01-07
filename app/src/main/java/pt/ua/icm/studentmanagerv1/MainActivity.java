@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //Bottom navigation bar
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
-        loadFragment(new HomeFragment());
+        loadFragment(new ListCoursesFragment());
 
 
 
@@ -109,9 +109,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Fragment fragment = null;
 
         switch (item.getItemId()) {
-            case R.id.navigation_home:
+            /*case R.id.navigation_home:
                 fragment = new HomeFragment();
-                break;
+                break;*/
             case R.id.navigation_class:
                 fragment = new ListCoursesFragment();
                 break;

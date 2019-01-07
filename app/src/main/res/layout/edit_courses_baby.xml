@@ -11,6 +11,8 @@
         android:id="@+id/edition_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+
         android:text="Ediçao" />
 
     <View
@@ -22,7 +24,8 @@
         android:id="@+id/baby_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Avaliações"
+        android:layout_marginRight="8dp"
         android:onClick="onEditionClick"
         />
 

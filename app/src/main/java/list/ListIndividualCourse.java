@@ -3,6 +3,7 @@ package list;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -61,6 +62,14 @@ public class ListIndividualCourse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_list_individual_course);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(ListIndividualCourse.this, ListCalculator.class);
+            intent.putExtra(EXTRA_EVALUATIONS, (Serializable) calculatorEvaluations);
+            startActivity(intent);
+            finish();
+        });
 
         Intent intent = getIntent();
 
@@ -325,27 +334,6 @@ public class ListIndividualCourse extends AppCompatActivity {
                 .update(evGroupName + "." + evName + ".Grade", grade);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_list, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.calculator:
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(ListIndividualCourse.this, ListCalculator.class);
-                intent.putExtra(EXTRA_EVALUATIONS, (Serializable) calculatorEvaluations);
-                startActivity(intent);
-                finish();
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 
 
