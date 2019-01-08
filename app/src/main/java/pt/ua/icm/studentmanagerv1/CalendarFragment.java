@@ -45,7 +45,7 @@ public class CalendarFragment {
         ContentUris.appendId(builder, startMillis);
         Intent intent = new Intent(Intent.ACTION_VIEW)
                 .setData(builder.build());
-        context.startActivity(intent);
+        //context.startActivity(intent);
 
         AllMightyCreator.getDb().collection("Students/St" + AllMightyCreator.getnMec() + "/Courses")
                 .get()
@@ -82,14 +82,14 @@ public class CalendarFragment {
                                 insertEvent(1, beginTime, endTime, title, context);
                                 /*for (Object x : ok.keySet()) {
                                     if (x.toString().equals("Study Sessions")) {
-                                        HashMap dates = (HashMap) ok.get(x);
+                                        HashMap dates = (HashMap) ok.getEvaluation(x);
                                         int cont = 0;
                                         for (Object y : dates.values()) {
                                             StringBuilder title1 = new StringBuilder(title + " - StudySessions ");
                                             ArrayList z = (ArrayList) y;
                                             Date d2 = null;
                                             try {
-                                                d2 = sdf3.parse(String.valueOf(z.get(0)));
+                                                d2 = sdf3.parse(String.valueOf(z.getEvaluation(0)));
 
                                             } catch (Exception e) {
                                                 e.printStackTrace();
@@ -97,7 +97,7 @@ public class CalendarFragment {
 
                                             Date d3 = null;
                                             try {
-                                                d3 = sdf3.parse(String.valueOf(z.get(1)));
+                                                d3 = sdf3.parse(String.valueOf(z.getEvaluation(1)));
 
                                             } catch (Exception e) {
                                                 e.printStackTrace();

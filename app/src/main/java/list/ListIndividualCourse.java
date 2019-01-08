@@ -1,6 +1,5 @@
 package list;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
@@ -10,16 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -86,12 +81,18 @@ public class ListIndividualCourse extends AppCompatActivity {
 
        messageAlert = findViewById(R.id.imageView);
 
-        getEvaluationInfo();
-        getDirectorInfo();
 
         directorInfo.setOnClickListener(view -> displaDirectorInfo());
 
         messageAlert.setOnClickListener(view -> displayCampMessage());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getEvaluationInfo();
+        getDirectorInfo();
+        Log.d(TAG, "OnStart");
     }
 
     private void displayCampMessage() {
@@ -102,21 +103,19 @@ public class ListIndividualCourse extends AppCompatActivity {
         EditText textSituation = mView.findViewById(R.id.textSituation);
 
         mBuilder.setView(mView)
-                .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String [] addresses = {"catarinaxavier@ua.pt"};
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("message/rfc822");
-                        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-                        intent.putExtra(Intent.EXTRA_SUBJECT, textAssunto.getText().toString());
-                        intent.putExtra(Intent.EXTRA_TEXT, textSituation.getText().toString());
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.ic_launcher_foreground));
-                        try{
+                .setPositiveButton("Enviar", (dialog, id) -> {
+                    String [] addresses = {"catarinaxavier@ua.pt"};
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("message/rfc822");
+                    intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+                    intent.putExtra(Intent.EXTRA_SUBJECT, textAssunto.getText().toString());
+                    intent.putExtra(Intent.EXTRA_TEXT, textSituation.getText().toString());
+                    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.ic_launcher_foreground));
+                    try{
 
-                            startActivity(intent);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        startActivity(intent);
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 });
         AlertDialog dialog = mBuilder.create();
@@ -166,11 +165,12 @@ public class ListIndividualCourse extends AppCompatActivity {
     }
 
     private void getEvaluationInfo() {
-        getEvaluationList(AllMightyCreator.getSpecificEvaluation(editionSubPath));
+        getEvaluationList(AllMightyCreator.getEvaluation(editionSubPath));
     }
 
     private void getEvaluationList(EvaluationGroup objectEvaluation) {
         LinearLayout parent = findViewById(R.id.list_all_evaluation);
+        parent.removeAllViews();
         Boolean flag = false;
 
 
@@ -307,6 +307,7 @@ public class ListIndividualCourse extends AppCompatActivity {
                             evGrade.setVisibility(View.VISIBLE);
                             evGrade.setText(gradeSubEV.getText().toString());
                             gradeSubEV.setText(finalGrade);
+                            AllMightyCreator.createUserEvaluation(editionSubPath);
                         } else {
                             Toast.makeText(getApplicationContext(), "Nota tem que estar entre 0 e 20\nNão guardado", Toast.LENGTH_SHORT).show();
                         }

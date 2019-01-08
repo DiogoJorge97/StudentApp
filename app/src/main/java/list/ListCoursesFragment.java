@@ -108,17 +108,17 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
         coursesNewName = new ArrayList<>();
         final List<String> stopSelect = new ArrayList<>();
         Log.d(TAG, "CourseNameList: " + coursesDocIdList.toString());
-        String lastY = coursesDocIdList.get(0).split("#")[0];
-        String lastS = coursesDocIdList.get(0).split("#")[1];
+        String lastY = coursesDocIdList.getEvaluation(0).split("#")[0];
+        String lastS = coursesDocIdList.getEvaluation(0).split("#")[1];
         coursesNewName.add(lastY);
         coursesNewName.add("   " + lastS);
         stopSelect.add(lastY);
         stopSelect.add("   " + lastS);
 
         for (String elem : coursesDocIdList) {
-            String currentY = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[0];
-            String currentS = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[1];
-            String currentID = coursesDocIdList.get(coursesDocIdList.indexOf(elem)).split("#")[2];
+            String currentY = coursesDocIdList.getEvaluation(coursesDocIdList.indexOf(elem)).split("#")[0];
+            String currentS = coursesDocIdList.getEvaluation(coursesDocIdList.indexOf(elem)).split("#")[1];
+            String currentID = coursesDocIdList.getEvaluation(coursesDocIdList.indexOf(elem)).split("#")[2];
             if (currentY.equals(lastY)) {
                 if (currentS.equals(lastS)) {
                     lastY = currentY;
@@ -150,7 +150,7 @@ public class ListCoursesFragment extends android.support.v4.app.Fragment {
             if (stopSelect.contains(elem)) {
                 positOfStop.add(coursesNewName.indexOf(elem));
             } else {
-                coursesNewName.set(bigCounter, "      " + coursesNameList.get(counter));
+                coursesNewName.set(bigCounter, "      " + coursesNameList.getEvaluation(counter));
                 counter++;
             }
             bigCounter++;

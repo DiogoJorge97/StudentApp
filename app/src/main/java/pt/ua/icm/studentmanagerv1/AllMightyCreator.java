@@ -1,22 +1,12 @@
 package pt.ua.icm.studentmanagerv1;
 
-import android.util.ArrayMap;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -73,7 +63,7 @@ public class AllMightyCreator {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
 
-                        createUserEvaluations(documentSnapshot.getId());
+                        createUserEvaluation(documentSnapshot.getId());
                         Log.d(TAG, "Doc name: " + documentSnapshot.getId());
                     }
                 }).addOnFailureListener(e -> {
@@ -81,13 +71,16 @@ public class AllMightyCreator {
         });
     }
 
-    private void createUserEvaluations(String subPath) {
+    public static void createUserEvaluation(String subPath) {
+        if (allEvaluationsMap.get(subPath)!= null){
+            allEvaluationsMap.remove(subPath);
+        }
         getDb().collection("/Students/St" + getnMec() + "/Courses/" + subPath + "/Evaluations")
                 .get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                 EvaluationGroup evaluationGroup = documentSnapshot.toObject(EvaluationGroup.class);
                 allEvaluationsMap.put(subPath, evaluationGroup);
-                Log.d(TAG, "Evaluation Group: " + evaluationGroup.toString());
+                Log.d("DTag", "Evaluation Group: " + evaluationGroup.toString());
 
 
                 Map<String, Map<String, Object>> practicalComponent = evaluationGroup.getPracticalComponent();
@@ -101,7 +94,7 @@ public class AllMightyCreator {
 
                 for (Map.Entry<String, Map<String, Map<String, Object>>> evaluationGroupMap : componentType.entrySet()) {
                     String evaluationGroupName = evaluationGroupMap.getKey();
-                    Log.d(TAG, evaluationGroupMap.getKey());
+                    Log.d("DTag", evaluationGroupMap.getKey());
                     for (Map.Entry<String, Map<String, Object>> evaluation : evaluationGroupMap.getValue().entrySet()) {
 
 
@@ -136,7 +129,6 @@ public class AllMightyCreator {
                 }
             }
         });
-
     }
 
     private void createUserDegreeObject() {
@@ -200,8 +192,8 @@ public class AllMightyCreator {
     public static Map<String, Map<String, Object>> getAllEvaluationsMap() {
         return evaluationMap;
     }
-
-    public static EvaluationGroup getSpecificEvaluation(String subpath) {
-        return allEvaluationsMap.get(subpath);
+    public static EvaluationGroup getEvaluation(String subPath){
+        return allEvaluationsMap.get(subPath);
     }
+
 }
