@@ -1,4 +1,4 @@
-# Stutend-App
+# Student-App
 
 #### Link para download da app [StudentApp apk](https://github.com/DiogoJorge97/StudentApp/blob/master/app-debug.apk)
 
